@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reader mockup · TikTok Shop policy notes</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #25221e;
+      --muted: #756f66;
+      --paper: #fbf8f0;
+      --paper-deep: #f1ecdf;
+      --sidebar: #232a2a;
+      --sidebar-ink: #f5f0e7;
+      --sidebar-muted: #acb4ac;
+      --accent: #bb5b36;
+      --accent-dark: #8e3e25;
+      --line: #ded6c8;
+      --focus: #e7a55e;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-height: 100vh; background: var(--paper-deep); color: var(--ink); }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+    .app { min-height: 100vh; display: grid; grid-template-columns: 290px minmax(0, 1fr); }
+    .sidebar { position: sticky; top: 0; z-index: 2; height: 100dvh; overflow-y: auto; background: var(--sidebar); color: var(--sidebar-ink); padding: 1.35rem 1rem 2rem; }
+    .sidebar-close { display: none; float: right; border: 1px solid #60706a; border-radius: .4rem; padding: .35rem .55rem; color: var(--sidebar-ink); background: transparent; font: .78rem ui-sans-serif, system-ui, sans-serif; }
+    .sidebar-backdrop { display: none; }
+    .eyebrow { margin: 0 0 .4rem; color: #e7a55e; font: 700 .72rem/1.3 ui-sans-serif, system-ui, sans-serif; letter-spacing: .13em; text-transform: uppercase; }
+    .sidebar h1 { margin: 0; max-width: 14rem; font-size: 1.55rem; line-height: 1.12; }
+    .sidebar-intro { margin: .8rem 0 1.2rem; color: var(--sidebar-muted); font: .86rem/1.45 ui-sans-serif, system-ui, sans-serif; }
+    .article-list { display: grid; gap: .72rem; }
+    .article-group { border-top: 1px solid #3b4440; padding-top: .6rem; }
+    .article-button, .section-button { width: 100%; border: 0; text-align: left; }
+    .article-button { padding: .35rem .45rem; border-radius: .4rem; color: var(--sidebar-ink); background: transparent; font-weight: 700; line-height: 1.28; }
+    .article-button:hover, .article-button[aria-current="true"] { background: #36403e; }
+    .article-date { display: block; margin-top: .24rem; color: var(--sidebar-muted); font: .73rem/1.2 ui-sans-serif, system-ui, sans-serif; font-weight: 400; }
+    .section-list { display: grid; gap: .15rem; margin: .28rem 0 0 .45rem; padding-left: .78rem; border-left: 1px solid #48514c; }
+    .section-button { padding: .28rem .45rem; border-radius: .28rem; color: var(--sidebar-muted); background: transparent; font: .78rem/1.3 ui-sans-serif, system-ui, sans-serif; }
+    .section-button:hover, .section-button[aria-current="true"] { background: #3a4844; color: #fff7e8; }
+
+    .reader { min-width: 0; background: var(--paper); }
+    .reader-header { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem clamp(1rem, 4vw, 3.5rem); border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 93%, transparent); backdrop-filter: blur(9px); }
+    .menu-button { display: none; border: 1px solid var(--line); border-radius: .45rem; padding: .45rem .6rem; color: var(--ink); background: var(--paper); font: .8rem ui-sans-serif, system-ui, sans-serif; }
+    .mode-label { color: var(--muted); font: 700 .74rem ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+    .mode-toggle { display: inline-grid; grid-template-columns: 1fr 1fr; padding: .2rem; border: 1px solid #cfc5b4; border-radius: 999px; background: #e9e2d5; }
+    .mode-toggle button { min-width: 6.7rem; border: 0; border-radius: 999px; padding: .5rem .85rem; color: var(--muted); background: transparent; font: 700 .82rem ui-sans-serif, system-ui, sans-serif; }
+    .mode-toggle button[aria-pressed="true"] { color: #fffaf1; background: var(--accent); box-shadow: 0 2px 6px #8e3e2533; }
+    .mode-toggle button:disabled { cursor: wait; opacity: .6; }
+
+    .page { max-width: 930px; margin: 0 auto; padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.1rem, 5vw, 4.5rem) 5rem; }
+    .mockup-ribbon { display: inline-flex; align-items: center; gap: .45rem; margin-bottom: 1.1rem; padding: .36rem .65rem; border: 1px solid #e2b896; border-radius: 999px; color: var(--accent-dark); background: #fff0e2; font: 800 .7rem ui-sans-serif, system-ui, sans-serif; letter-spacing: .1em; }
+    .mockup-ribbon::before { width: .45rem; height: .45rem; border-radius: 50%; background: var(--accent); content: ""; }
+    h2 { max-width: 800px; margin: 0; font-size: clamp(2rem, 4vw, 2.6rem); line-height: 1.05; letter-spacing: -.035em; }
+    .article-meta { display: flex; flex-wrap: wrap; gap: .55rem 1rem; align-items: center; margin: 1.2rem 0 2rem; color: var(--muted); font: .86rem/1.45 ui-sans-serif, system-ui, sans-serif; }
+    .article-meta a { color: var(--accent-dark); font-weight: 700; }
+    .article-meta a:hover { color: var(--accent); }
+    .source-url { flex-basis: 100%; overflow-wrap: anywhere; color: #81786b; font: .74rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .source-note { margin: 0 0 2rem; padding: .9rem 1rem; border-left: 3px solid var(--accent); color: #685f53; background: #f5efe3; font: .84rem/1.5 ui-sans-serif, system-ui, sans-serif; }
+    .source-note strong { color: var(--ink); }
+    .reading-card { padding: clamp(1.25rem, 3vw, 2.4rem); border: 1px solid var(--line); border-radius: .8rem; background: #fffdf8; box-shadow: 0 14px 38px #493b2412; }
+    .reading-card h3 { margin: 0 0 .8rem; font-size: clamp(1.35rem, 2.5vw, 1.9rem); line-height: 1.2; }
+    .demo-status { display: inline-block; margin-bottom: 1.4rem; color: var(--accent-dark); font: 700 .74rem ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+    .demo-copy { max-width: 47rem; margin: 0 0 1rem; font-size: clamp(1.14rem, 2vw, 1.42rem); line-height: 1.72; }
+    .demo-copy:last-of-type { margin-bottom: 0; }
+    .phrase.extra { display: inline; vertical-align: baseline; white-space: normal; }
+    .phrase.extra.is-animating { display: inline-block; overflow: hidden; white-space: normal; }
+    .phrase.extra[hidden] { display: none; }
+    .placeholder { color: var(--muted); font-style: italic; }
+    .card-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .8rem; margin-top: 1.6rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font: .78rem/1.4 ui-sans-serif, system-ui, sans-serif; }
+    .card-footer a { color: var(--accent-dark); font-weight: 700; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 760px) {
+      .app { display: block; }
+      .sidebar { position: fixed; inset: 0 auto 0 0; width: min(86vw, 320px); overflow-y: auto; transform: translateX(-102%); transition: transform .25s ease; box-shadow: 14px 0 35px #0005; }
+      .sidebar.is-open { transform: translateX(0); }
+      .sidebar-close { display: inline-block; }
+      .sidebar-backdrop { position: fixed; inset: 0; z-index: 1; display: block; border: 0; background: #1118; }
+      .sidebar-backdrop[hidden] { display: none; }
+      .reader-header { padding: .65rem 1rem; }
+      .menu-button { display: inline-block; }
+      .mode-label { display: none; }
+      .mode-toggle button { min-width: 5.5rem; padding-inline: .6rem; }
+      .page { padding-top: 2.5rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Danh sách bài chính sách">
+      <button class="sidebar-close" id="sidebar-close" type="button">Đóng</button>
+      <p class="eyebrow">Reader mockup</p>
+      <h1>TikTok Shop<br>policy notes</h1>
+      <p class="sidebar-intro">Chọn một bài hoặc mục con để xem cách trang đọc sẽ chuyển giữa tóm tắt và bản diễn giải đầy đủ hơn.</p>
+      <nav class="article-list" id="article-list"></nav>
+    </aside>
+    <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Đóng danh sách bài đọc" hidden></button>
+
+    <main class="reader">
+      <header class="reader-header">
+        <button class="menu-button" id="menu-button" type="button" aria-controls="sidebar" aria-expanded="false">☰ Bài đọc</button>
+        <span class="mode-label">Chế độ hiển thị</span>
+        <div class="mode-toggle" role="group" aria-label="Chế độ nội dung">
+          <button type="button" data-mode="summary" aria-pressed="true">Tóm tắt</button>
+          <button type="button" data-mode="full" aria-pressed="false">Full demo</button>
+        </div>
+      </header>
+
+      <article class="page" aria-live="polite">
+        <div class="mockup-ribbon">MOCKUP TƯƠNG TÁC</div>
+        <h2 id="article-title"></h2>
+        <div class="article-meta" id="article-meta"></div>
+        <p class="source-note"><strong>Nguồn dữ liệu mô phỏng:</strong> tên bài, ngày và anchor đọc từ repo. Nội dung dưới đây là diễn giải DEMO tự soạn để thử giao diện; không chép toàn văn TikTok Shop và không tự tải nguồn.</p>
+        <section class="reading-card" id="reading-card" aria-labelledby="section-title"></section>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    const sourceBase = 'https://seller-vn.tiktok.com/university/essay?knowledge_id=';
+    const articles = [
+      {
+        id: '8623594494494465',
+        title: 'Chính sách đánh giá hiệu suất của người bán trên TikTok Shop',
+        date: '22/09/2026',
+        sections: [
+          { id: 'ahr', label: 'Điểm AHR', anchor: '2-tr-i-m-t-nh-tr-ng-t-i-kho-n-ahr', paragraphs: [
+            '<span class="phrase">AHR là điểm nhìn tổng hợp về việc cửa hàng giữ đúng chuẩn vận hành.</span><span class="phrase extra" hidden> Điểm có thể gắn với nhiều nhóm hành vi và các mốc xử lý khác nhau.</span><span class="phrase"> Vì vậy, hãy xem cả lý do, thời hạn và trạng thái hiện tại trước khi kết luận.</span>',
+            '<span class="phrase">Bản demo minh họa rằng điểm có thể được xem xét lại sau một khoảng thời gian.</span><span class="phrase extra" hidden> Một số trường hợp đặc biệt có thể khiến cửa hàng không bị giữ điểm như thông thường.</span><span class="phrase"> Đây chỉ là cách diễn giải giao diện, không thay cho bảng chính sách gốc.</span>'
+          ] },
+          { id: 'appeal', label: 'Kháng nghị', anchor: '8-kh-ng-ngh-', paragraphs: [
+            '<span class="phrase">Nếu không đồng ý với một quyết định, người bán có thể chuẩn bị kháng nghị theo từng lần xem xét.</span><span class="phrase extra" hidden> Demo này minh họa hai nhịp thời hạn: lần đầu và lần tiếp theo sau khi bị từ chối.</span><span class="phrase"> Hãy đính kèm lý do và tài liệu phù hợp trước khi gửi.</span>',
+            '<span class="phrase">Kết quả có thể gỡ xử lý hoặc khôi phục quyền liên quan.</span><span class="phrase extra" hidden> Nội dung thực tế, điều kiện và mốc thời gian phải kiểm tra tại bài nguồn.</span>'
+          ] },
+          { id: 'data', label: 'Dữ liệu khách hàng', anchor: 'vi-ph-m-li-n-quan-n-th-ng-tin-nh-n-d-ng-c-nh-n-c-a-ng-i-mua-buyer-pii-', paragraphs: [] }
+        ]
+      },
+      {
+        id: '6837788624340738',
+        title: 'Cộng Tác Tiếp Thị Liên Kết', date: '14/10/2026',
+        sections: [
+          { id: 'open', label: 'Hai cách hợp tác', anchor: 'c-ng-t-c-l-g-', paragraphs: [] },
+          { id: 'invite', label: 'Tạo lời mời', anchor: 't-o-c-ng-t-c-m-c-ti-u-c-a-b-n', paragraphs: [] },
+          { id: 'limits', label: 'Hạn mức', anchor: 'h-n-m-c-l-i-m-i-c-ng-t-c-m-c-ti-u', paragraphs: [] }
+        ]
+      },
+      {
+        id: '8064144491513601',
+        title: 'Nguyên tắc đăng bán sản phẩm có thương hiệu', date: '22/09/2026',
+        sections: [
+          { id: 'identity', label: 'Nhận diện', anchor: 's-n-ph-m-c-th-ng-hi-u-l-g-', paragraphs: [] },
+          { id: 'images', label: 'Ảnh và tên hàng', anchor: 'h-nh-nh-s-n-ph-m', paragraphs: [] },
+          { id: 'limits', label: 'Hạn chế', anchor: 'h-n-ch-c-bi-t-p-d-ng-v-i-m-t-s-th-ng-hi-u', paragraphs: [] }
+        ]
+      },
+      {
+        id: '5407666547115796',
+        title: 'Cách đăng ký Chứng nhận thương hiệu', date: '23/09/2026',
+        sections: [
+          { id: 'role', label: 'Vai trò', anchor: 'ch-ng-nh-n-th-ng-hi-u-l-g-', paragraphs: [] },
+          { id: 'owner', label: 'Chủ nhãn', anchor: 'ch-s-h-u-nh-n-hi-u', paragraphs: [] },
+          { id: 'submit', label: 'Nộp hồ sơ', anchor: 'c-ch-g-i-ch-ng-nh-n-th-ng-hi-u', paragraphs: [] }
+        ]
+      },
+      {
+        id: '7575204750444289',
+        title: 'Tính Năng Người Bán Tự Vận Chuyển (SOF)', date: '10/06/2025',
+        sections: [
+          { id: 'conditions', label: 'Điều kiện', anchor: 't-nh-n-ng-ng-i-b-n-t-v-n-chuy-n-sof-c-nh-ng-i-u-ki-n-g-', paragraphs: [] },
+          { id: 'duties', label: 'Trách nhiệm', anchor: 'tr-ch-nhi-m-c-a-nh-b-n-h-ng-khi-s-d-ng-t-nh-n-ng-ng-i-b-n-t-v-n-chuy-n-sof-', paragraphs: [] },
+          { id: 'setup', label: 'Cấu hình', anchor: 'h-ng-d-n-t-nh-n-ng-ng-i-b-n-t-v-n-chuy-n-sof-', paragraphs: [] }
+        ]
+      },
+      {
+        id: '7179954358519569',
+        title: 'Sản phẩm dành cho Nhà bán hàng được mời', date: '04/08/2026',
+        sections: [
+          { id: 'entry', label: 'Đầu vào', anchor: 's-n-ph-m-ch-d-nh-cho-nh-b-n-h-ng-c-m-i-l-g-', paragraphs: [] },
+          { id: 'food', label: 'Thực phẩm', anchor: 'th-c-ph-m-t-i-v-th-c-ph-m-ng-l-nh-c-h-n-ch-v-kho-v-n', paragraphs: [] },
+          { id: 'voucher', label: 'Người lớn / voucher', anchor: 'voucher-v-t-l-phi-u-qu-t-ng-v-t-l-', paragraphs: [] }
+        ]
+      }
+    ];
+
+    const list = document.querySelector('#article-list');
+    const title = document.querySelector('#article-title');
+    const meta = document.querySelector('#article-meta');
+    const card = document.querySelector('#reading-card');
+    const modeButtons = [...document.querySelectorAll('[data-mode]')];
+    const sidebar = document.querySelector('#sidebar');
+    const menuButton = document.querySelector('#menu-button');
+    const sidebarClose = document.querySelector('#sidebar-close');
+    const sidebarBackdrop = document.querySelector('#sidebar-backdrop');
+    const mobileQuery = window.matchMedia('(max-width: 760px)');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let currentArticle = articles[0];
+    let currentSection = articles[0].sections[0];
+    let mode = 'summary';
+    let animating = false;
+
+    const sourceUrl = (article, section) => `${sourceBase}${article.id}&lang=vi-VN#${section.anchor}`;
+    const placeholder = '<p class="placeholder">Chưa đưa nội dung vào mockup. Mục này chỉ giữ chỗ để kiểm tra cách chọn bài, anchor và bố cục đọc.</p>';
+
+    function syncSidebarA11y() {
+      const mobile = mobileQuery.matches;
+      const open = sidebar.classList.contains('is-open');
+      if (mobile) {
+        sidebar.inert = !open;
+        sidebar.setAttribute('aria-hidden', String(!open));
+        sidebarBackdrop.hidden = !open;
+      } else {
+        sidebar.inert = false;
+        sidebar.removeAttribute('aria-hidden');
+        sidebarBackdrop.hidden = true;
+      }
+    }
+
+    function closeSidebar(restoreFocus = true) {
+      sidebar.classList.remove('is-open');
+      menuButton.setAttribute('aria-expanded', 'false');
+      syncSidebarA11y();
+      if (restoreFocus && mobileQuery.matches) menuButton.focus({ preventScroll: true });
+    }
+
+    function openSidebar() {
+      if (!mobileQuery.matches) return;
+      sidebar.classList.add('is-open');
+      menuButton.setAttribute('aria-expanded', 'true');
+      syncSidebarA11y();
+    }
+
+    function renderNavigation() {
+      const activeElement = document.activeElement;
+      const restoreListFocus = list.contains(activeElement);
+      const focusedArticle = restoreListFocus ? activeElement.dataset.article : null;
+      const focusedSection = restoreListFocus ? activeElement.dataset.section || null : null;
+      list.innerHTML = articles.map(article => `
+        <div class="article-group">
+          <button class="article-button" type="button" data-article="${article.id}" aria-current="${article.id === currentArticle.id}">
+            ${article.title}<span class="article-date">${article.date} · ${article.sections.length} mục demo</span>
+          </button>
+          <div class="section-list">
+            ${article.sections.map(section => `<button class="section-button" type="button" data-article="${article.id}" data-section="${section.id}" aria-current="${article.id === currentArticle.id && section.id === currentSection.id}">${section.label}</button>`).join('')}
+          </div>
+        </div>`).join('');
+      list.querySelectorAll('[data-article]').forEach(button => button.addEventListener('click', () => {
+        const article = articles.find(item => item.id === button.dataset.article);
+        const section = article.sections.find(item => item.id === button.dataset.section) || article.sections[0];
+        selectSection(article, section);
+      }));
+      if (restoreListFocus) {
+        const focusTarget = [...list.querySelectorAll('[data-article]')].find(button => (
+          button.dataset.article === focusedArticle && (focusedSection ? button.dataset.section === focusedSection : !button.dataset.section)
+        ));
+        focusTarget?.focus({ preventScroll: true });
+      }
+    }
+
+    function renderArticle() {
+      title.textContent = currentArticle.title;
+      const url = sourceUrl(currentArticle, currentSection);
+      meta.innerHTML = `<span>Ngày nguồn: <strong>${currentArticle.date}</strong></span><a href="${url}" target="_blank" rel="noopener noreferrer">Mở mục nguồn ↗</a><span class="source-url">Nguồn xác nhận: ${url}</span>`;
+      const paragraphs = currentSection.paragraphs.length ? currentSection.paragraphs.map(text => `<p class="demo-copy">${text}</p>`).join('') : placeholder;
+      card.innerHTML = `<span class="demo-status">Full demo — bản diễn giải mô phỏng, chưa phải toàn văn</span><h3 id="section-title">${currentSection.label}</h3>${paragraphs}<div class="card-footer"><span>Chế độ hiện tại: <b>${mode === 'summary' ? 'Tóm tắt' : 'Full demo'}</b></span><a href="${sourceUrl(currentArticle, currentSection)}" target="_blank" rel="noopener noreferrer">Xem nguồn xác nhận ↗</a></div>`;
+      applyMode(mode, false);
+    }
+
+    function setModeButtons() {
+      modeButtons.forEach(button => {
+        button.disabled = animating;
+        button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
+      });
+    }
+
+    function applyMode(nextMode, animate = true) {
+      mode = nextMode;
+      const extras = [...card.querySelectorAll('.phrase.extra')];
+      const shouldAnimate = animate && !reduceMotion.matches && extras.length > 0;
+      setModeButtons();
+      if (!shouldAnimate) {
+        extras.forEach(extra => {
+          extra.getAnimations().forEach(animation => animation.cancel());
+          extra.classList.remove('is-animating');
+          extra.hidden = nextMode === 'summary';
+          extra.style.cssText = nextMode === 'summary' ? 'max-width:0; margin-inline-end:0; opacity:0;' : '';
+        });
+        setModeButtons();
+        const status = card.querySelector('.card-footer b');
+        if (status) status.textContent = nextMode === 'summary' ? 'Tóm tắt' : 'Full demo';
+        return;
+      }
+      animating = true;
+      setModeButtons();
+      const jobs = extras.map(extra => {
+        extra.getAnimations().forEach(animation => animation.cancel());
+        extra.hidden = false;
+        extra.classList.add('is-animating');
+        extra.style.maxWidth = nextMode === 'full' ? '0px' : 'none';
+        extra.style.marginInlineEnd = nextMode === 'full' ? '0' : '.26em';
+        extra.style.opacity = nextMode === 'full' ? '0' : '1';
+        const fullWidth = `${extra.scrollWidth}px`;
+        const endWidth = nextMode === 'full' ? fullWidth : '0px';
+        const endMargin = nextMode === 'full' ? '.26em' : '0';
+        const animation = extra.animate([
+          { maxWidth: nextMode === 'full' ? '0px' : fullWidth, marginInlineEnd: nextMode === 'full' ? '0' : '.26em', opacity: nextMode === 'full' ? 0 : 1 },
+          { maxWidth: endWidth, marginInlineEnd: endMargin, opacity: nextMode === 'full' ? 1 : 0 }
+        ], { duration: 340, easing: 'cubic-bezier(.22,.75,.25,1)', fill: 'forwards' });
+        return animation.finished.then(() => {
+          animation.cancel();
+          extra.hidden = nextMode === 'summary';
+          extra.classList.toggle('is-animating', nextMode === 'summary');
+          extra.style.cssText = nextMode === 'summary' ? 'max-width:0; margin-inline-end:0; opacity:0;' : '';
+        });
+      });
+      Promise.all(jobs).finally(() => {
+        animating = false;
+        setModeButtons();
+        const status = card.querySelector('.card-footer b');
+        if (status) status.textContent = nextMode === 'summary' ? 'Tóm tắt' : 'Full demo';
+      });
+    }
+
+    function selectSection(article, section) {
+      if (animating) return;
+      currentArticle = article;
+      currentSection = section;
+      renderNavigation();
+      renderArticle();
+      if (mobileQuery.matches) closeSidebar();
+      document.querySelector('.page').scrollIntoView({ block: 'start' });
+    }
+
+    modeButtons.forEach(button => button.addEventListener('click', () => {
+      if (!animating && button.dataset.mode !== mode) applyMode(button.dataset.mode);
+    }));
+    menuButton.addEventListener('click', () => sidebar.classList.contains('is-open') ? closeSidebar() : openSidebar());
+    sidebarClose.addEventListener('click', () => closeSidebar());
+    sidebarBackdrop.addEventListener('click', () => closeSidebar());
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && mobileQuery.matches && sidebar.classList.contains('is-open')) closeSidebar();
+    });
+    mobileQuery.addEventListener('change', syncSidebarA11y);
+    renderNavigation();
+    renderArticle();
+    syncSidebarA11y();
+  </script>
+</body>
+</html>
