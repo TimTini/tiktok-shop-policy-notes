@@ -1,0 +1,83 @@
+[
+  {
+    "id": "8623594494494465",
+    "label": "Hiệu suất & chế tài",
+    "note": "Nguồn dùng lẫn trừ/tích lũy AHR; ngưỡng giữ theo bảng gốc.",
+    "rows": [
+      {"title":"Phạm vi", "sections":[0], "summary":"Người bán phải tuân thủ pháp luật, điều khoản và chính sách."},
+      {"title":"Điểm AHR", "sections":[1], "summary":"Xóa điểm sau 90 ngày; ngoại lệ cửa hàng đóng/AHR bằng 0."},
+      {"title":"Liên đới", "sections":[2], "summary":"Tài khoản liên kết có thể cùng chịu phạt."},
+      {"title":"Vi phạm", "sections":[3], "summary":"Điểm riêng theo chứng nhận, IP, niêm yết, chất lượng, dịch vụ, giao hàng, nội dung."},
+      {"title":"Dữ liệu khách", "sections":[4], "summary":"Không chuyển hướng/thu thập/chia sẻ/dùng/giữ PII ngoài giao dịch; hết hạn trả/khiếu nại phải xóa/ẩn danh."},
+      {"title":"Ngưỡng", "sections":[5], "summary":"12: hạn chế 7 ngày. 24: hạn chế và ngừng tạo/cập nhật niêm yết 14 ngày. 36: đóng 28 ngày, hạn chế 42 ngày. 48: chấm dứt vĩnh viễn. Cảnh báo trước ngưỡng 5 điểm."},
+      {"title":"Biện pháp khác", "sections":[6], "summary":"Gỡ hàng, hạn chế truy cập/đơn/quyền lợi, giữ tiền, xử lý pháp lý."},
+      {"title":"Giữ tiền", "sections":[7], "summary":"Mốc 180 ngày hoặc hoàn tất điều tra; có thể trừ bồi thường."},
+      {"title":"Kháng nghị", "sections":[8,9,10], "summary":"Tối đa hai lần: lần đầu trong 30 ngày, lần hai trong 15 ngày sau từ chối. Thành công: gỡ phạt/khôi phục quyền."}
+    ]
+  },
+  {
+    "id":"6837788624340738",
+    "label":"Tiếp thị liên kết",
+    "note":"FAQ vẫn nêu 1.000 lượt/24 giờ; phần mới áp dụng hạn mức tuần từ 12/10/2026. Kiểm tra hạn mức thực tế trong Affiliate Center.",
+    "rows":[
+      {"title":"Hai cách hợp tác", "sections":[0,1,2,3,16], "summary":"Mở: nhà sáng tạo tự chọn hàng. Mục tiêu: mời người cụ thể, chờ chấp nhận. Có thể dùng cả hai; vào Seller Center → Tiếp thị liên kết."},
+      {"title":"Tạo lời mời", "sections":[4,5,6,7,8,9,10], "summary":"Điền tên, hiệu lực, liên hệ, nội dung ưu tiên; chọn hàng, hoa hồng, mẫu và nhà sáng tạo. Tối đa 100 sản phẩm, 50 người/lời mời; lưu tối đa 1.000 người."},
+      {"title":"Quản lý", "sections":[11,12,13], "summary":"Theo dõi chấp nhận, bài đăng, video; chỉnh/xóa sản phẩm hoặc người được mời. Đang quảng bá: sửa đổi áp dụng hôm sau."},
+      {"title":"Hạn mức", "sections":[14,15], "summary":"Tuần dựa GMV 30 ngày, không cộng dồn; top 20% hiệu quả tiếp cận 14 ngày có thể được thưởng."},
+      {"title":"Thiết lập mở", "sections":[17,18,19,20,21,22,23], "summary":"Thêm hàng lẻ/hàng loạt hoặc tự động; đặt hoa hồng, mẫu; lọc yêu cầu và theo dõi hiệu suất. Có thể gỡ người/sản phẩm."},
+      {"title":"Hoa hồng", "sections":[24], "summary":"Trùng hai loại: ưu tiên mục tiêu. Giảm 15% xuống 12%: người cũ giữ 15% trong 30 ngày, người mới nhận 12%."}
+    ]
+  },
+  {
+    "id":"8064144491513601",
+    "label":"Đăng bán thương hiệu",
+    "rows":[
+      {"title":"Nhận diện", "sections":[0,1,2], "summary":"Một số sản phẩm có thương hiệu có thể cần chứng nhận trước khi đăng. Khai nhãn nhất quán; hàng không nhãn không gây nhầm, trừ thông tin tương thích."},
+      {"title":"Ảnh", "sections":[3], "summary":"Dùng ảnh sở hữu/được phép sử dụng; ít nhất một ảnh thể hiện thương hiệu. Cấm che logo để né nhận diện."},
+      {"title":"Tên hàng", "sections":[4], "summary":"Đặt thương hiệu chính trước mẫu; không chèn thương hiệu khác khi chưa được phép."},
+      {"title":"Danh mục", "sections":[5], "summary":"Chọn đúng nhóm, gồm cả hàng đã qua sử dụng."},
+      {"title":"Trường thương hiệu", "sections":[6], "summary":"Chọn đúng nhãn; mục xám cần chứng nhận. Đã duyệt: chọn nhãn có thẻ xanh và cập nhật cả niêm yết cũ. Hàng không nhãn: khai tương ứng."},
+      {"title":"Mô tả", "sections":[7], "summary":"Không chèn nhãn khác trái phép hoặc che thương hiệu; vẫn phải đáp ứng yêu cầu tên và ảnh."},
+      {"title":"Bao bì", "sections":[8], "summary":"Ảnh chính khớp hàng giao; nên so sánh cũ/mới. Có thể ghi thay đổi, không ám chỉ bao bì cũ là giả."},
+      {"title":"Hạn chế", "sections":[9,10], "summary":"Một số nhãn cần doanh nghiệp và chứng nhận; nền tảng có thể cấm nhãn. Tái phạm xử nặng; có quyền kháng nghị."}
+    ]
+  },
+  {
+    "id":"5407666547115796",
+    "label":"Chứng nhận thương hiệu",
+    "rows":[
+      {"title":"Vai trò", "sections":[0,1], "summary":"Chứng nhận không miễn trách nhiệm sở hữu trí tuệ. Chọn chủ nhãn, độc quyền toàn quốc, cấp 1–3 hoặc bằng chứng mua hàng (chỉ một số người bán)."},
+      {"title":"Chủ nhãn", "sections":[2,3], "summary":"Cần giấy nhãn hiệu; chỉ một tài khoản làm chủ sở hữu."},
+      {"title":"Ủy quyền", "sections":[4,5,6,7], "summary":"LOA phải đúng người nhận, nhãn, hiệu lực, chữ ký/chức vụ; độc quyền cần điều khoản riêng. Cấp 2–3 bổ sung bằng chứng quyền ủy quyền tiếp."},
+      {"title":"Mua hàng", "sections":[8], "summary":"Hóa đơn/biên lai trong 12 tháng, đủ thông tin giao dịch; thêm chứng minh nhà cung cấp được ủy quyền, tồn kho và ảnh sáu góc. Giấu giá theo NDA cần kèm hợp đồng."},
+      {"title":"Nộp hồ sơ", "sections":[9,10,11,12,13,14,15], "summary":"Trung tâm chứng nhận → Chứng nhận thương hiệu: chọn loại, nhập thông tin/ủy quyền, tải hồ sơ. Chưa được ủy quyền: xin trước. Xử lý đến 7 ngày; cấm giấy giả, tài liệu có thể được chia sẻ để xác minh."},
+      {"title":"Tên & tra cứu", "sections":[16,17,18,19,20], "summary":"Tên 2–30 ký tự; có quy tắc cấm ký hiệu/domain/quảng cáo. Dùng số đăng ký, Nice 1–35; tra WIPO. Tên đã duyệt không sửa được; bị từ chối cần đối chiếu lý do."}
+    ]
+  },
+  {
+    "id":"7575204750444289",
+    "label":"Tự vận chuyển SOF",
+    "rows":[
+      {"title":"Điều kiện", "sections":[0,1], "summary":"SOF dành cho người bán được chọn, có lý do phù hợp: lắp đặt, nhạy nhiệt, nguy hiểm, cồng kềnh/nặng. Không hỗ trợ COD; bị gắn cờ hai kỳ liên tiếp có thể bị thu hồi."},
+      {"title":"Trách nhiệm", "sections":[2], "summary":"Tự tổ chức giao, nhập tracking, cập nhật trạng thái/POD; không gộp sai phương thức. Lưu POD ít nhất một năm; nên thử giao ít nhất hai lần."},
+      {"title":"Thời hạn", "sections":[2,7], "summary":"Chỉ đổi sang đã giao/thất bại sau 24 giờ từ lúc đánh dấu vận chuyển; sửa tracking trong 36 giờ. Chưa đánh dấu đã giao: không được thanh toán, đơn bị hủy ngày 13 từ thanh toán."},
+      {"title":"Trả hàng", "sections":[2], "summary":"Thu gom trong 48 giờ; yêu cầu hoàn tiền tự duyệt. Phí hai bên thỏa thuận. Nền tảng không chịu trách nhiệm giao sau hủy."},
+      {"title":"Cấu hình", "sections":[3,4,5,6], "summary":"Bật SOF, lập vùng/phí, gán sản phẩm. Mẫu tối thiểu 0–30 kg; vượt trần tính mức trần."},
+      {"title":"Thao tác", "sections":[7,8,9], "summary":"Nhập tracking, xác nhận kiện, cập nhật kết quả/POD; hàng loạt dùng mẫu. Thất bại chuyển đơn thành hủy; người mua không thấy tracking chi tiết."}
+    ]
+  },
+  {
+    "id":"7179954358519569",
+    "label":"Ngành hàng được mời",
+    "rows":[
+      {"title":"Đầu vào", "sections":[0], "summary":"Qua quy trình mời, nộp hồ sơ tại Trung tâm chứng nhận."},
+      {"title":"Sách & media", "sections":[1,6], "summary":"Chỉ danh mục sách/báo được liệt kê; media vật lý: cassette, CD/DVD, đĩa than."},
+      {"title":"Kính & hoa", "sections":[2,3], "summary":"Kính cần tuyên bố đủ điều kiện bán, công bố và phân loại thiết bị y tế. Hoa cần SOF."},
+      {"title":"Thực phẩm", "sections":[4], "summary":"Cần một trong: ATTP, OCOP ≥3 sao, VietGAP, cam kết an toàn, HACCP, ISO 22000."},
+      {"title":"Trang sức/SIM/xe", "sections":[5,7,8], "summary":"Cần giấy kinh doanh. Trang sức thêm chứng nhận/báo cáo, ảnh; SIM thêm hồ sơ phân phối; xe có thuộc tính bắt buộc."},
+      {"title":"Hàng cũ", "sections":[9], "summary":"Chỉ tài khoản được quản lý; nộp qua quản lý tài khoản. Nhóm điện tử, túi/phụ kiện theo nguồn."},
+      {"title":"Mẹ bé & pin", "sections":[10,11], "summary":"Vitamin/bổ sung cần công bố, tiếp nhận, hợp quy, ảnh. Cấm quảng cáo sữa công thức sơ sinh. Ba nhóm pin cần SOF trước, không thêm hồ sơ."},
+      {"title":"Người lớn/voucher", "sections":[12,13,14], "summary":"Cả hai cần doanh nghiệp, ảnh bán sàn khác; voucher cần được mời. Bôi trơn/bao cao su cần SLH; bổ sung sinh lý cần DKSP. Voucher ghi hiệu lực/điều kiện, cấm gây hiểu nhầm. Tái phạm xử nặng."}
+    ]
+  }
+]
