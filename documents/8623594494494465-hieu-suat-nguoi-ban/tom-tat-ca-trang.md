@@ -1,0 +1,47 @@
+# Tóm tắt cả trang: Chính sách đánh giá hiệu suất của người bán trên TikTok Shop
+
+- Ngày trên bài nguồn: 22/09/2026
+- knowledge_id: 8623594494494465
+- Toàn văn: [toan-van.md](toan-van.md)
+- Tóm tắt từng mục: [tom-tat-tung-muc.md](tom-tat-tung-muc.md)
+- Nguồn: https://seller-vn.tiktok.com/university/essay?knowledge_id=8623594494494465&role=1&course_type=1&from=search&identity=1&lang=vi-VN
+
+---
+
+- Chính sách này chỉ áp dụng cho người bán. Người bán phải tự tuân thủ luật, điều khoản và chính sách.
+- Danh sách vi phạm là ví dụ. Vi phạm lặp lại có thể bị áp dụng nhiều điểm AHR hơn và xử nghiêm khắc hơn.
+- Mục 2 gọi AHR là điểm bị trừ theo mức độ nghiêm trọng và tác động của vi phạm.
+- Mục 5 gọi AHR là điểm tích lũy đến ngưỡng chế tài.
+- Mục 4 ghi xem phần 7. Phần 7 là tạm giữ số dư. Mục 6 là danh sách ví dụ hành động thực thi.
+- Mục 2: điểm bị trừ tự xóa sau mỗi 90 ngày, trừ khi cửa hàng đã bị nền tảng đóng, tức AHR = 0.
+- Mục 8.1: điểm phát sinh từ mỗi vi phạm tự xóa sau 90 ngày theo lịch, trừ khi đã tích lũy đủ 48 điểm.
+- Nếu tài khoản liên kết vi phạm điều khoản, chính sách hoặc luật, nền tảng có thể phạt người bán cùng các tài khoản đó.
+- Thông báo cảnh báo chính thức được gửi khi điểm AHR còn cách mỗi ngưỡng 5 điểm.
+- Điểm trong bảng ví dụ gồm cả khoảng và mức cố định.
+  - Tỷ lệ phản hồi 24 giờ thấp: 1 điểm.
+  - SFCR và LDR: 2–4 điểm.
+  - Tỷ lệ trả hàng/hoàn tiền do lỗi người bán: 2 điểm.
+  - Hàng nhái: 0–4 điểm.
+  - Giao tiếp không phù hợp hoặc bị cấm: 1–12 điểm.
+  - Nội dung không nguyên bản và hoạt động bị luật cấm: 48 điểm.
+  - Chứng nhận, vi phạm IP, hàng giả, niêm yết, chất lượng, SNAD và một số lỗi nội dung có khoảng tới 48.
+- Vi phạm Buyer PII bị hành động nặng hơn, gồm tạm ngừng tài khoản và vô hiệu hóa vĩnh viễn.
+- Cấm chuyển hướng người mua ra ngoài sàn.
+- Cấm thu thập PII trừ khi TikTok Shop cho phép để thực hiện đơn.
+- Cấm dùng sai hoặc chia sẻ PII ngoài đúng giao dịch TikTok Shop đó.
+- Cấm giữ PII quá nhu cầu thực hiện đơn. Khi giao dịch và thời hạn trả hàng/khiếu nại áp dụng (nếu có) đã hết, phải xóa hoặc ẩn danh PII không chậm trễ.
+- Ngưỡng theo chữ “tích lũy” ở mục 5:
+  - 12 điểm: không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và lợi ích khác trong 7 ngày theo lịch; không đăng ký Chương trình liên kết trong 7 ngày theo lịch.
+  - 24 điểm: hai hạn chế trên trong 14 ngày theo lịch; tạm ngưng tạo và cập nhật danh sách niêm yết mới trong 14 ngày theo lịch.
+  - 36 điểm: vô hiệu hóa cửa hàng trong 28 ngày theo lịch; không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và lợi ích khác trong 42 ngày theo lịch.
+  - 48 điểm: chấm dứt cửa hàng vĩnh viễn; có thể hành động pháp lý và/hoặc báo cơ quan quản lý.
+- Mục 6 còn liệt kê ví dụ khác: cảnh báo, tạm ngưng hoặc hủy niêm yết, chặn traffic, gỡ quyền đề xuất ở Trung tâm mua sắm, giới hạn đơn và số niêm yết, thu hồi quyền lợi, ngừng đăng ký bên liên kết, khóa truy cập, giữ số dư tạm thời hoặc vĩnh viễn nếu nghiêm trọng và/hoặc hủy mọi giao dịch, thu hồi khuyến mãi hoặc trợ cấp, xóa tài khoản, kéo dài kỳ quyết toán, báo cơ quan để truy tố, tự duyệt hoàn tiền, khấu trừ tiền để bồi thường.
+- Việc giữ Số dư, gồm tiền bán hàng, có thể được thực hiện lâu hơn trong trường hợp (a) 180 ngày theo lịch kể từ thông báo tạm ngưng, hoặc (b) khi điều tra xong.
+- Có thể trừ Số dư để bồi thường, kể cả chi phí điều tra, rồi trả phần còn lại.
+- Trang ghi kháng nghị việc giữ tiền theo mục 9. Phần kháng nghị trên trang được đánh số mục 8. Kháng nghị việc giữ tiền thành công thì được trả lại tiền.
+- Ví dụ có thể bị giữ: SNAD, đơn giả hoặc gian lận, truy cập trái phép, số dư âm, lạm dụng trợ cấp, không bảo mật tài khoản bằng xác minh 2 bước.
+- Kháng nghị gửi trong thông báo chế tài, tối đa hai lần.
+  - Lần đầu trong 30 ngày kể từ ngày nhận thông báo.
+  - Lần hai trong 15 ngày kể từ ngày lần đầu bị từ chối.
+- Thành công thì xóa mọi hình phạt đã ban và/hoặc khôi phục mọi đặc quyền đã thu hồi.
+- Sau khi lần hai bị từ chối, quyết định có hiệu lực cuối cùng.

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bản xem thử: bụi chữ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #d5e3e4;
+      --ink: #142326;
+      --muted: #3d5554;
+      --card: #f4fafa;
+      --line: #c3d4d3;
+      --stamp: #0e4f4c;
+      --stamp-ink: #f4fffd;
+      --note: #e6f3f1;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1.25rem;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", "Segoe UI Variable", Tahoma, sans-serif;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+    .card {
+      width: min(100%, 40rem);
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 1.25rem 1.4rem 1.05rem;
+      align-self: center;
+      box-shadow: 0 10px 28px rgba(14, 50, 52, 0.06);
+    }
+    .eyebrow {
+      margin: 0 0 1.5rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .stage {
+      position: relative;
+    }
+    .line {
+      margin: 0;
+      font-family: inherit;
+      font-size: 1.35rem;
+      font-weight: 600;
+      line-height: 1.45;
+      letter-spacing: 0;
+      color: var(--ink);
+    }
+    .dust {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 2;
+      display: block;
+      pointer-events: none;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.15rem;
+    }
+    button {
+      font: inherit;
+      font-size: 1rem;
+      line-height: 1.2;
+      padding: 0.48rem 0.95rem;
+      border: 1px solid var(--stamp);
+      background: #fff;
+      color: var(--stamp);
+      cursor: pointer;
+    }
+    #snap {
+      background: var(--stamp);
+      color: var(--stamp-ink);
+    }
+    #snap:hover:not(:disabled) { background: #0c3f3c; }
+    #swap:hover:not(:disabled),
+    #reset:hover:not(:disabled) { background: var(--note); }
+    button:disabled {
+      cursor: default;
+      opacity: 0.45;
+    }
+    :focus-visible {
+      outline: 2px solid var(--stamp);
+      outline-offset: 3px;
+    }
+    .hint {
+      margin: 0.8rem 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <p class="eyebrow">Bản xem thử</p>
+    <div class="stage" id="stage">
+      <h1 class="line" id="line"><span id="before">Điểm AHR</span><span id="slot"> đủ 48 thì</span><span id="after"> cửa hàng chấm dứt.</span></h1>
+      <canvas class="dust" id="dust" width="1" height="1" aria-hidden="true"></canvas>
+    </div>
+    <div class="actions">
+      <button type="button" id="snap">Búng tay</button>
+      <button type="button" id="swap">Đổi chữ</button>
+      <button type="button" id="reset">Làm lại</button>
+    </div>
+    <p class="hint" id="hint" role="status">Bấm Búng tay để vài chữ tan. Bấm Đổi chữ để đổi cụm đó.</p>
+  </main>
+  <script>
+  (function () {
+    "use strict";
+
+    var BLEED_TOP = 36;
+    var BLEED_RIGHT = 64;
+    var ORIGINAL_SLOT = " đủ 48 thì";
+    var NEXT_SLOT = " đủ 36 thì";
+    var IDLE_HINT = "Bấm Búng tay để vài chữ tan. Bấm Đổi chữ để đổi cụm đó.";
+    var GONE_HINT = "Câu còn lại: Điểm AHR cửa hàng chấm dứt. Bấm Làm lại để về câu gốc.";
+    var NEXT_HINT = "Câu đã đổi: Điểm AHR đủ 36 thì cửa hàng chấm dứt. Bấm Làm lại để về câu gốc.";
+    var SNAP_RUN = "Vài chữ đang tan, phần sau đang khít lại.";
+    var SWAP_RUN = "Cụm chữ đang tan và đổi trong lúc đó.";
+    var RESTORE_RUN = "Chữ đang tụ lại về câu gốc.";
+
+    var stage = document.getElementById("stage");
+    var line = document.getElementById("line");
+    var slot = document.getElementById("slot");
+    var canvas = document.getElementById("dust");
+    var snapBtn = document.getElementById("snap");
+    var swapBtn = document.getElementById("swap");
+    var resetBtn = document.getElementById("reset");
+    var hint = document.getElementById("hint");
+    var ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+    var REDUCED_SEC = 0.42;
+    var state = { raf: 0, running: false };
+    var particles = [];
+    var sourceCanvas = null;
+    var endAt = 0;
+    var mode = "original";
+    var pending = "";
+    var gathering = false;
+    var layout = { kind: "", fromMode: "original", fromW: 0, toW: 0, reduced: true };
+
+    function setHint(text) {
+      hint.textContent = text;
+    }
+
+    function syncButtons() {
+      var busy = state.running;
+      snapBtn.disabled = busy || mode === "gone";
+      swapBtn.disabled = busy || mode !== "original";
+      resetBtn.disabled = busy;
+    }
+
+    function clearSurface() {
+      sourceCanvas = null;
+      particles = [];
+      endAt = 0;
+      if (!ctx) return;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 1;
+      canvas.height = 1;
+      canvas.style.width = "1px";
+      canvas.style.height = "1px";
+      canvas.style.top = "0px";
+      canvas.style.left = "0px";
+    }
+
+    function measureLines(textNode) {
+      var text = textNode.nodeValue;
+      var range = document.createRange();
+      var lines = [];
+      var lineStart = 0;
+      var lineTop = null;
+
+      function pushLine(end) {
+        var raw = text.slice(lineStart, end);
+        var lead = raw.length - raw.trimStart().length;
+        var content = raw.trim();
+        if (!content) return;
+        range.setStart(textNode, lineStart + lead);
+        range.setEnd(textNode, lineStart + lead + content.length);
+        var box = range.getBoundingClientRect();
+        if (box.width <= 0) return;
+        lines.push({
+          text: content,
+          left: box.left,
+          top: box.top,
+          height: box.height
+        });
+      }
+
+      for (var i = 0; i < text.length; i++) {
+        range.setStart(textNode, i);
+        range.setEnd(textNode, i + 1);
+        var rects = range.getClientRects();
+        if (!rects.length) continue;
+        var top = rects[0].top;
+        if (lineTop === null) lineTop = top;
+        if (Math.abs(top - lineTop) > 2) {
+          pushLine(i);
+          lineStart = i;
+          lineTop = top;
+        }
+      }
+      pushLine(text.length);
+      return lines;
+    }
+
+    function buildDust() {
+      var textNode = slot.firstChild;
+      if (!textNode || textNode.nodeType !== 3 || slot.childNodes.length !== 1) return null;
+      if (!textNode.nodeValue || !textNode.nodeValue.trim()) return null;
+
+      var style = window.getComputedStyle(line);
+      var stageRect = stage.getBoundingClientRect();
+      var lines = measureLines(textNode);
+      if (!lines.length) return null;
+
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var cssW = stageRect.width + BLEED_RIGHT;
+      var cssH = stageRect.height + BLEED_TOP;
+      var bw = Math.max(1, Math.round(cssW * dpr));
+      var bh = Math.max(1, Math.round(cssH * dpr));
+
+      canvas.width = bw;
+      canvas.height = bh;
+      canvas.style.width = cssW + "px";
+      canvas.style.height = cssH + "px";
+      canvas.style.left = "0px";
+      canvas.style.top = (-BLEED_TOP) + "px";
+
+      var scaleX = bw / cssW;
+      var scaleY = bh / cssH;
+      ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.font = (style.fontWeight || "600") + " " + (style.fontSize || "22px") + " " + (style.fontFamily || "sans-serif");
+      ctx.fillStyle = style.color || "#142326";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+
+      for (var n = 0; n < lines.length; n++) {
+        var box = lines[n];
+        var x = box.left - stageRect.left;
+        var y = (box.top - stageRect.top) + BLEED_TOP + box.height / 2;
+        ctx.fillText(box.text, x, y);
+      }
+
+      var image = ctx.getImageData(0, 0, bw, bh);
+      var data = image.data;
+      var step = dpr >= 1.5 ? 2 : 1;
+      var cols = Math.ceil(bw / step);
+      var rows = Math.ceil(bh / step);
+      var keep = new Uint8Array(cols * rows);
+      var cells = [];
+
+      for (var cy = 0; cy < rows; cy++) {
+        for (var cx = 0; cx < cols; cx++) {
+          var x0 = cx * step;
+          var y0 = cy * step;
+          var sw = Math.min(step, bw - x0);
+          var sh = Math.min(step, bh - y0);
+          var bestA = 0;
+          var br = 0;
+          var bg = 0;
+          var bb = 0;
+          for (var yy = 0; yy < sh; yy++) {
+            for (var xx = 0; xx < sw; xx++) {
+              var pIndex = ((y0 + yy) * bw + (x0 + xx)) * 4;
+              var alpha = data[pIndex + 3];
+              if (alpha > bestA) {
+                bestA = alpha;
+                br = data[pIndex];
+                bg = data[pIndex + 1];
+                bb = data[pIndex + 2];
+              }
+            }
+          }
+          if (bestA < 8) continue;
+          keep[cy * cols + cx] = 1;
+          cells.push({
+            sx: x0,
+            sy: y0,
+            sw: sw,
+            sh: sh,
+            r: br,
+            g: bg,
+            b: bb,
+            a: bestA / 255
+          });
+        }
+      }
+
+      if (!cells.length) return null;
+
+      for (var py = 0; py < bh; py++) {
+        for (var px = 0; px < bw; px++) {
+          var cellX = (px / step) | 0;
+          var cellY = (py / step) | 0;
+          if (!keep[cellY * cols + cellX]) data[(py * bw + px) * 4 + 3] = 0;
+        }
+      }
+
+      var off = document.createElement("canvas");
+      off.width = bw;
+      off.height = bh;
+      off.getContext("2d").putImageData(image, 0, 0);
+
+      var minX = cells[0].sx;
+      var maxX = cells[0].sx;
+      var minY = cells[0].sy;
+      var maxY = cells[0].sy;
+      for (var i = 1; i < cells.length; i++) {
+        var cell = cells[i];
+        if (cell.sx < minX) minX = cell.sx;
+        if (cell.sx > maxX) maxX = cell.sx;
+        if (cell.sy < minY) minY = cell.sy;
+        if (cell.sy > maxY) maxY = cell.sy;
+      }
+
+      var spanX = Math.max(1, maxX - minX);
+      var spanY = Math.max(1, maxY - minY);
+      var limit = 0;
+      for (var j = 0; j < cells.length; j++) {
+        var item = cells[j];
+        var xNorm = (item.sx - minX) / spanX;
+        var yNorm = (item.sy - minY) / spanY;
+        item.xNorm = xNorm;
+        item.delay = xNorm * 0.8 + yNorm * 0.05 + Math.random() * 0.12;
+        item.life = 0.9 + Math.random() * 0.4;
+        item.vx = (14 + Math.random() * 40) * scaleX;
+        item.vy = -(8 + Math.random() * 18) * scaleY;
+        item.wobble = (2 + Math.random() * 5) * scaleX;
+        item.seed = Math.random() * Math.PI * 2;
+        item.size = step * (1.15 + Math.random() * 0.9);
+        var done = item.delay + item.life;
+        if (done > limit) limit = done;
+      }
+
+      var target = limit;
+      if (target < 1.65) target = 1.65;
+      if (target > 2.4) target = 2.4;
+      if (target !== limit) {
+        var fit = target / limit;
+        for (var k = 0; k < cells.length; k++) {
+          cells[k].delay *= fit;
+          cells[k].life *= fit;
+        }
+        limit = target;
+      }
+
+      var leftEdge = 1;
+      var q;
+      for (q = 0; q < cells.length; q++) {
+        if (cells[q].xNorm < leftEdge) leftEdge = cells[q].xNorm;
+      }
+      for (q = 0; q < cells.length; q++) {
+        if (cells[q].xNorm <= leftEdge + 0.001) cells[q].delay = 0;
+      }
+
+      return { source: off, particles: cells, endAt: limit };
+    }
+
+    function gatherFlight(p, uGlobal) {
+      var f = p.xNorm || 0;
+      if (f < 0) f = 0;
+      if (f > 1) f = 1;
+      var finish = 0.58 + (1 - f) * 0.42;
+      if (uGlobal >= finish) return null;
+      return 1 - (uGlobal / finish);
+    }
+
+    function drawDust(t, uGather) {
+      if (!sourceCanvas) return;
+      var gather = uGather >= 0;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(sourceCanvas, 0, 0);
+
+      var i;
+      var p;
+      var age;
+      var flight;
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        if (gather) {
+          flight = gatherFlight(p, uGather);
+          if (flight !== null) ctx.clearRect(p.sx, p.sy, p.sw, p.sh);
+        } else if (t - p.delay >= 0) {
+          ctx.clearRect(p.sx, p.sy, p.sw, p.sh);
+        }
+      }
+
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        var u;
+        if (gather) {
+          flight = gatherFlight(p, uGather);
+          if (flight === null || flight < 0) continue;
+          u = flight;
+          age = (1 - u) * p.life;
+        } else {
+          age = t - p.delay;
+          if (age < 0 || age >= p.life) continue;
+          u = age / p.life;
+        }
+        var eased = 1 - (1 - u) * (1 - u);
+        var size = p.size * (1 - u * 0.35);
+        var x = p.sx + (p.sw - size) / 2 + p.vx * eased + Math.sin(p.seed + age * 5.5) * p.wobble * eased;
+        var y = p.sy + (p.sh - size) / 2 + p.vy * eased;
+        var fade = gather ? p.a * (0.28 + 0.72 * (1 - u)) : p.a * (1 - u);
+        if (fade < 0.03) continue;
+        var dust = u * 0.7;
+        var r = Math.round(p.r + (176 - p.r) * dust);
+        var g = Math.round(p.g + (186 - p.g) * dust);
+        var b = Math.round(p.b + (184 - p.b) * dust);
+        ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + fade.toFixed(3) + ")";
+        ctx.fillRect(x, y, size, size);
+        if (eased > 0.12) {
+          var trail = size * 0.5;
+          ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + (fade * 0.55).toFixed(3) + ")";
+          ctx.fillRect(x - p.vx * 0.1, y - p.vy * 0.1, trail, trail);
+        }
+      }
+    }
+
+    function prefersReducedMotion() {
+      try {
+        return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function clockNow() {
+      if (window.performance && typeof window.performance.now === "function") return window.performance.now();
+      return Date.now();
+    }
+
+    function lockHeight(h) {
+      if (h > 1) slot.style.height = h + "px";
+    }
+
+    function armSlot() {
+      slot.style.display = "inline-block";
+      slot.style.verticalAlign = "bottom";
+      slot.style.whiteSpace = "pre";
+      slot.style.overflow = "hidden";
+      slot.style.minWidth = "0px";
+      slot.style.transition = "none";
+    }
+
+    function tryBuild() {
+      var built = null;
+      try {
+        built = buildDust();
+      } catch (err) {
+        built = null;
+      }
+      if (!built) clearSurface();
+      return built;
+    }
+
+    function naturalWidth(text) {
+      var saved = {
+        text: slot.textContent,
+        width: slot.style.width,
+        height: slot.style.height,
+        visibility: slot.style.visibility,
+        opacity: slot.style.opacity,
+        hidden: slot.hidden
+      };
+      slot.hidden = false;
+      slot.style.visibility = "visible";
+      slot.textContent = text;
+      slot.style.width = "auto";
+      slot.style.height = "";
+      var box = slot.getBoundingClientRect();
+      slot.textContent = saved.text;
+      slot.style.width = saved.width;
+      slot.style.height = saved.height;
+      slot.style.visibility = saved.visibility;
+      slot.style.opacity = saved.opacity;
+      slot.hidden = saved.hidden;
+      return { width: box.width, height: box.height };
+    }
+
+    function captureOriginalDust() {
+      var saved = {
+        text: slot.textContent,
+        width: slot.style.width,
+        height: slot.style.height,
+        visibility: slot.style.visibility,
+        opacity: slot.style.opacity,
+        hidden: slot.hidden
+      };
+      var built = null;
+      var fullW = 0;
+      var fullH = 0;
+      try {
+        slot.hidden = false;
+        slot.textContent = ORIGINAL_SLOT;
+        slot.style.visibility = "visible";
+        slot.style.opacity = "1";
+        slot.style.width = "auto";
+        slot.style.height = "";
+        void slot.offsetWidth;
+        var box = slot.getBoundingClientRect();
+        fullW = box.width;
+        fullH = box.height;
+        built = buildDust();
+      } catch (err) {
+        built = null;
+      }
+      if (!built) clearSurface();
+      slot.textContent = saved.text;
+      slot.style.width = saved.width;
+      slot.style.height = saved.height;
+      slot.style.visibility = saved.visibility;
+      slot.style.opacity = saved.opacity;
+      slot.hidden = saved.hidden;
+      return { built: built, fullW: fullW, fullH: fullH };
+    }
+
+    function applyLayout(u) {
+      if (u < 0) u = 0;
+      if (u > 1) u = 1;
+      var w = layout.fromW + (layout.toW - layout.fromW) * u;
+      if (w < 0) w = 0;
+      slot.style.width = (Math.round(w * 100) / 100) + "px";
+
+      if (layout.kind === "snap") {
+        if (layout.reduced) slot.style.opacity = String(1 - u);
+        return;
+      }
+
+      if (layout.kind === "swap") {
+        if (!layout.reduced) {
+          slot.style.opacity = String(u);
+          return;
+        }
+        if (u < 0.4) {
+          if (slot.textContent !== ORIGINAL_SLOT) slot.textContent = ORIGINAL_SLOT;
+          slot.style.opacity = String(1 - (u / 0.4));
+        } else {
+          if (slot.textContent !== NEXT_SLOT) slot.textContent = NEXT_SLOT;
+          slot.style.opacity = String((u - 0.4) / 0.6);
+        }
+        return;
+      }
+
+      if (layout.kind === "restore" && layout.fromMode === "gone") {
+        if (layout.reduced) {
+          slot.style.visibility = "visible";
+          if (slot.textContent !== ORIGINAL_SLOT) slot.textContent = ORIGINAL_SLOT;
+          slot.style.opacity = String(u);
+        }
+        return;
+      }
+
+      if (layout.kind === "restore") {
+        if (!layout.reduced) {
+          slot.style.opacity = String(1 - u);
+          return;
+        }
+        if (u < 0.4) {
+          if (slot.textContent !== NEXT_SLOT) slot.textContent = NEXT_SLOT;
+          slot.style.opacity = String(1 - (u / 0.4));
+        } else {
+          if (slot.textContent !== ORIGINAL_SLOT) slot.textContent = ORIGINAL_SLOT;
+          slot.style.opacity = String((u - 0.4) / 0.6);
+        }
+      }
+    }
+
+    function finishEffect() {
+      var kind = pending;
+      state.running = false;
+      if (state.raf) {
+        window.cancelAnimationFrame(state.raf);
+        state.raf = 0;
+      }
+      gathering = false;
+      clearSurface();
+      pending = "";
+      slot.style.transition = "none";
+      slot.style.height = "";
+
+      if (kind === "snap") {
+        slot.style.visibility = "hidden";
+        slot.style.opacity = "0";
+        slot.style.width = "0px";
+        slot.hidden = true;
+        slot.setAttribute("aria-hidden", "true");
+        mode = "gone";
+        setHint(GONE_HINT);
+      } else if (kind === "swap") {
+        slot.hidden = false;
+        slot.textContent = NEXT_SLOT;
+        slot.style.visibility = "visible";
+        slot.style.opacity = "1";
+        slot.style.width = "auto";
+        slot.removeAttribute("aria-hidden");
+        mode = "replaced";
+        setHint(NEXT_HINT);
+      } else {
+        slot.hidden = false;
+        slot.textContent = ORIGINAL_SLOT;
+        slot.style.visibility = "visible";
+        slot.style.opacity = "1";
+        slot.style.width = "auto";
+        slot.removeAttribute("aria-hidden");
+        mode = "original";
+        setHint(IDLE_HINT);
+      }
+      syncButtons();
+    }
+
+    function startLoop(built, reverse) {
+      gathering = !!(reverse && built);
+      if (built) {
+        sourceCanvas = built.source;
+        particles = built.particles;
+        endAt = built.endAt;
+      } else {
+        sourceCanvas = null;
+        particles = [];
+        endAt = REDUCED_SEC;
+        gathering = false;
+      }
+      var dur = endAt;
+      if (!(dur > 0.05)) dur = REDUCED_SEC;
+      endAt = dur;
+      var origin = clockNow();
+      applyLayout(0);
+      if (sourceCanvas) {
+        if (gathering) drawDust(0, 0);
+        else drawDust(0);
+      }
+      function frame(now) {
+        if (!state.running) return;
+        var elapsed = (now - origin) / 1000;
+        if (elapsed < 0) elapsed = 0;
+        if (elapsed >= dur) {
+          finishEffect();
+          return;
+        }
+        var u = elapsed / dur;
+        applyLayout(u);
+        if (sourceCanvas) {
+          if (gathering) drawDust(0, u);
+          else drawDust(elapsed);
+        }
+        if (!state.running) return;
+        state.raf = window.requestAnimationFrame(frame);
+      }
+      state.raf = window.requestAnimationFrame(frame);
+    }
+
+    function beginRemove(kind, reduced) {
+      var fromW = slot.getBoundingClientRect().width;
+      var fromH = slot.getBoundingClientRect().height;
+      var built = reduced ? null : tryBuild();
+      var toW = 0;
+      if (kind === "swap") {
+        var sized = naturalWidth(NEXT_SLOT);
+        toW = sized.width > 0 ? sized.width : fromW;
+        if (!(fromH > 1)) fromH = sized.height;
+      }
+      layout.kind = kind;
+      layout.fromMode = mode;
+      layout.fromW = fromW;
+      layout.toW = toW;
+      layout.reduced = !built;
+      slot.hidden = false;
+      slot.style.transition = "none";
+      lockHeight(fromH);
+      slot.style.width = fromW + "px";
+      slot.setAttribute("aria-hidden", "true");
+      if (kind === "snap") {
+        if (built) {
+          slot.style.visibility = "hidden";
+          slot.style.opacity = "1";
+        } else {
+          slot.style.visibility = "visible";
+          slot.style.opacity = "1";
+        }
+        setHint(SNAP_RUN);
+      } else if (built) {
+        slot.textContent = NEXT_SLOT;
+        slot.style.visibility = "visible";
+        slot.style.opacity = "0";
+        setHint(SWAP_RUN);
+      } else {
+        slot.textContent = ORIGINAL_SLOT;
+        slot.style.visibility = "visible";
+        slot.style.opacity = "1";
+        setHint(SWAP_RUN);
+      }
+      startLoop(built, false);
+    }
+
+    function beginRestore(reduced) {
+      var fromMode = mode;
+      var fromW = 0;
+      var fromH = 0;
+      if (fromMode !== "gone") {
+        fromW = slot.getBoundingClientRect().width;
+        fromH = slot.getBoundingClientRect().height;
+      }
+      var built = null;
+      var toW = 0;
+      var fullH = 0;
+      if (!reduced) {
+        var captured = captureOriginalDust();
+        built = captured.built;
+        toW = captured.fullW;
+        fullH = captured.fullH;
+      }
+      if (!(toW > 0)) {
+        var sized = naturalWidth(ORIGINAL_SLOT);
+        toW = sized.width;
+        if (!(fullH > 1)) fullH = sized.height;
+      }
+      layout.kind = "restore";
+      layout.fromMode = fromMode;
+      layout.fromW = fromW;
+      layout.toW = toW > 0 ? toW : fromW;
+      layout.reduced = !built;
+      slot.hidden = false;
+      slot.style.transition = "none";
+      lockHeight(fromH > 1 ? fromH : fullH);
+      slot.setAttribute("aria-hidden", "true");
+      if (fromMode === "gone") {
+        slot.textContent = ORIGINAL_SLOT;
+        slot.style.width = "0px";
+        if (built) {
+          slot.style.visibility = "hidden";
+          slot.style.opacity = "1";
+        } else {
+          slot.style.visibility = "visible";
+          slot.style.opacity = "0";
+        }
+      } else {
+        slot.textContent = NEXT_SLOT;
+        slot.style.visibility = "visible";
+        slot.style.opacity = "1";
+        slot.style.width = fromW + "px";
+      }
+      setHint(RESTORE_RUN);
+      startLoop(built, true);
+    }
+
+    function begin(kind) {
+      if (state.running) return;
+      if (kind === "snap" && mode === "gone") return;
+      if (kind === "swap" && mode !== "original") return;
+      if (kind === "restore" && mode === "original") return;
+      state.running = true;
+      pending = kind;
+      syncButtons();
+      armSlot();
+      var reduced = prefersReducedMotion() || !ctx;
+      if (kind === "restore") beginRestore(reduced);
+      else beginRemove(kind, reduced);
+    }
+
+    snapBtn.addEventListener("click", function () { begin("snap"); });
+    swapBtn.addEventListener("click", function () { begin("swap"); });
+    resetBtn.addEventListener("click", function () { begin("restore"); });
+    syncButtons();
+  }());
+  </script>
+</body>
+</html>

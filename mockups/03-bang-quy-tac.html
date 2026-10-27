@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bản xem thử: bảng quy tắc</title>
+  <style>
+    :root {
+      --bg: #e7eee4;
+      --sheet: #f6faf4;
+      --ink: #17241c;
+      --head: #1b3328;
+      --muted: #4c5e53;
+      --line: #c9d4c6;
+      --exc: #fff1e4;
+      --exc-ink: #7a3412;
+      --empty: #eef3ec;
+      --focus: #7a3412;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", "Segoe UI Variable", Tahoma, sans-serif;
+      font-size: 16.5px;
+      line-height: 1.45;
+    }
+    .skip { position: absolute; left: 0.75rem; top: -3rem; background: #fff; padding: 0.4rem 0.7rem; z-index: 20; }
+    .skip:focus { top: 0.5rem; }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    a { color: #1b3328; }
+    .bar { position: sticky; top: 0; z-index: 6; background: var(--head); color: #f3f7f1; padding: 0.65rem 1.1rem 0.75rem; }
+    .bar a { color: #d5eadc; }
+    .bar a[aria-current="page"] { color: #fff; text-decoration: none; border-bottom: 2px solid #f0c7a2; }
+    .bar-inner, .wrap { max-width: 1440px; margin: 0 auto; }
+    .kicker { margin: 0 0 0.3rem; font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 0.78rem; }
+    .bar-row { display: flex; flex-wrap: wrap; gap: 0.7rem 1.4rem; align-items: baseline; justify-content: space-between; }
+    .brand { margin: 0; font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.03em; }
+    .nav { display: flex; flex-wrap: wrap; gap: 0.4rem 0.85rem; margin: 0; padding: 0; list-style: none; }
+    .wrap { padding: 1.1rem 1.1rem 3rem; }
+    h1 { font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: clamp(1.6rem, 2.5vw, 2.15rem); line-height: 1.15; letter-spacing: -0.03em; margin: 0 0 0.45rem; font-weight: 600; }
+    .dek, .meta { margin: 0 0 0.7rem; max-width: 78ch; }
+    .meta { color: var(--muted); }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin: 0 0 0.8rem; padding: 0; list-style: none; font-size: 0.95rem; }
+    .sw { display: inline-block; width: 0.85rem; height: 0.85rem; vertical-align: -0.1rem; margin-right: 0.3rem; border: 1px solid var(--line); }
+    .sw-exc { background: var(--exc); }
+    .sw-empty { background: var(--empty); }
+    .reg { background: var(--sheet); border: 1px solid var(--line); }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 58rem; }
+    caption { text-align: left; padding: 0.7rem 0.75rem; font-weight: 650; }
+    th, td { text-align: left; vertical-align: top; padding: 0.55rem 0.65rem; border-bottom: 1px solid var(--line); }
+    thead th { position: sticky; top: 77px; background: var(--head); color: #f3f7f1; font-weight: 600; z-index: 3; box-shadow: inset 0 -1px 0 #3d5c4c; }
+    tbody th[scope="rowgroup"] { background: #e4eee6; font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 0.95rem; letter-spacing: 0.01em; padding-top: 0.85rem; }
+    .code { font-family: Bahnschrift, "Segoe UI", sans-serif; font-weight: 600; white-space: nowrap; width: 4.2rem; }
+    td.exc { background: var(--exc); color: var(--exc-ink); }
+    td.empty { background: var(--empty); color: var(--muted); }
+    .num { font-variant-numeric: tabular-nums; }
+    .prose { margin-top: 1.4rem; }
+    .prose h2 { font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 1.25rem; margin: 0 0 0.4rem; }
+    .block { padding: 0.9rem 0; border-top: 1px solid var(--line); max-width: 72ch; }
+    .block h3 { margin: 0 0 0.35rem; font-size: 1rem; }
+    .block p { margin: 0 0 0.5rem; }
+    .verb { font-weight: 700; }
+    @media (max-width: 1100px) {
+      .reg { overflow-x: auto; }
+      thead th { position: static; }
+    }
+    @media (max-width: 860px) {
+      .reg { overflow: visible; }
+      table { min-width: 0; }
+      thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      table, tbody, tr, th, td { display: block; width: auto; }
+      thead th { position: static; }
+      tr { border-bottom: 1px solid var(--line); padding: 0.35rem 0.75rem 0.7rem; }
+      tbody th[scope="rowgroup"] { border-bottom: 0; }
+      td { border-bottom: 0; padding: 0.35rem 0; }
+      td::before { content: attr(data-label); display: block; font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.12rem; }
+      .code { width: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#noi-dung">Tới nội dung</a>
+  <header class="bar">
+    <div class="bar-inner">
+      <p class="kicker">Bản xem thử · không phải trang chính sách · không sửa bản ghi</p>
+      <div class="bar-row">
+        <p class="brand">Sổ quy tắc</p>
+        <ul class="nav">
+          <li><a href="01-doc-song-song.html">Đọc song song</a></li>
+          <li><a href="02-tom-tat-truoc.html">Tóm tắt trước</a></li>
+          <li><a href="03-bang-quy-tac.html" aria-current="page">Bảng quy tắc</a></li>
+          <li><a href="cach-trinh-bay.md">Ghi chú cách trình bày</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  <main class="wrap" id="noi-dung">
+    <p class="meta">Chính sách đánh giá hiệu suất · 22/09/2026 · knowledge_id 8623594494494465 · <a href="https://seller-vn.tiktok.com/university/essay?knowledge_id=8623594494494465&amp;role=1&amp;course_type=1&amp;from=search&amp;identity=1&amp;lang=vi-VN">trang nguồn</a></p>
+    <h1>Mỗi dòng một điều kiện. Ngoại lệ không xuống chân trang.</h1>
+    <p class="dek">Bảng này để soát nhanh. Đoạn toàn văn nằm phía dưới, đúng mục ghi ở cột cuối. Hai câu 90 ngày là hai dòng. Ô không có ngoại lệ vẫn ghi “Không ghi ở dòng này”, không để trống.</p>
+    <ul class="legend">
+      <li><span class="sw sw-exc" aria-hidden="true"></span>Ô cam: nguồn có mệnh đề trừ, lệch số mục, hoặc chữ tóm tắt đã bỏ.</li>
+      <li><span class="sw sw-empty" aria-hidden="true"></span>Ô xám: câu này không ghi ngoại lệ riêng.</li>
+    </ul>
+    <div class="reg">
+      <table>
+        <caption>Quy tắc trích từ bài hiệu suất người bán. Không phải toàn bộ chính sách.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Dòng</th>
+            <th scope="col">Điều kiện</th>
+            <th scope="col">Hệ quả</th>
+            <th scope="col">Ngoại lệ</th>
+            <th scope="col">Mục</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th colspan="5" scope="rowgroup">Hai cách viết về xóa điểm. Không gộp một dòng.</th></tr>
+          <tr>
+            <th class="code" scope="row">2a</th>
+            <td data-label="Điều kiện">Điểm AHR bị trừ do vi phạm. Mục này dùng chữ “trừ điểm”.</td>
+            <td data-label="Hệ quả">Tự động xóa sau mỗi 90 ngày. Trong toàn văn, số 90 được in đậm.</td>
+            <td class="exc" data-label="Ngoại lệ">Trừ khi cửa hàng của người bán đã bị nền tảng đóng, tức là AHR = 0.</td>
+            <td data-label="Mục"><a href="#nguon-2">2</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">8.1a</th>
+            <td data-label="Điều kiện">Điểm AHR phát sinh từ mỗi hành động vi phạm. Câu nằm trong quy trình kháng nghị.</td>
+            <td data-label="Hệ quả">Xóa tự động sau 90 ngày theo lịch.</td>
+            <td class="exc" data-label="Ngoại lệ">Trừ khi người bán đã tích lũy đủ 48 điểm. Đây không phải ngoại lệ “cửa hàng đóng / AHR = 0”.</td>
+            <td data-label="Mục"><a href="#nguon-81">8.1</a></td>
+          </tr>
+          <tr><th colspan="5" scope="rowgroup">Ngưỡng mục 5. Chữ của mục này là “tích lũy”, không phải “trừ điểm”.</th></tr>
+          <tr>
+            <th class="code" scope="row">5-cb</th>
+            <td data-label="Điều kiện">Điểm AHR còn cách mỗi ngưỡng thực thi 5 điểm.</td>
+            <td data-label="Hệ quả">Nền tảng gửi thông báo cảnh báo chính thức.</td>
+            <td class="empty" data-label="Ngoại lệ">Không ghi ở dòng này.</td>
+            <td data-label="Mục"><a href="#nguon-5">5</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">5-12</th>
+            <td data-label="Điều kiện">Tích lũy tới 12 điểm.</td>
+            <td data-label="Hệ quả">Không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (7) ngày theo lịch. Không đăng ký Chương trình liên kết trong (7) ngày theo lịch.</td>
+            <td class="empty" data-label="Ngoại lệ">Không ghi ngoại lệ riêng ở dòng này. Cả mục nói có thể áp dụng nhiều hành động, tùy hình thức vi phạm.</td>
+            <td data-label="Mục"><a href="#nguon-5">5</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">5-24</th>
+            <td data-label="Điều kiện">Tích lũy tới 24 điểm.</td>
+            <td data-label="Hệ quả">Không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (14) ngày theo lịch. Không đăng ký Chương trình liên kết trong (14) ngày theo lịch. Tạm ngưng tạo và cập nhật danh sách niêm yết mới trong (14) ngày theo lịch.</td>
+            <td class="exc" data-label="Ngoại lệ">Tóm tắt mục chỉ viết “hai hạn chế trên”. Bảng này nhắc lại nội dung hai hạn chế vì đọc riêng dòng 24 sẽ không thấy dòng 12.</td>
+            <td data-label="Mục"><a href="#nguon-5">5</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">5-36</th>
+            <td data-label="Điều kiện">Tích lũy tới 36 điểm.</td>
+            <td data-label="Hệ quả">Vô hiệu hóa cửa hàng trong (28) ngày theo lịch. Không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (42) ngày theo lịch.</td>
+            <td class="exc" data-label="Ngoại lệ">Dòng nguồn không nhắc cấm đăng ký Chương trình liên kết, và không nhắc ngưng tạo niêm yết. Không kéo hai việc đó từ ngưỡng 24 sang.</td>
+            <td data-label="Mục"><a href="#nguon-5">5</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">5-48</th>
+            <td data-label="Điều kiện">Tích lũy tới 48 điểm.</td>
+            <td data-label="Hệ quả">Vĩnh viễn chấm dứt cửa hàng. Có thể bắt đầu hành động pháp lý đối với người bán và/hoặc báo cáo người bán với cơ quan quản lý có liên quan.</td>
+            <td class="exc" data-label="Ngoại lệ">Giữ chữ “có thể” và “và/hoặc” trong cột hệ quả. Không đổi thành “sẽ kiện và sẽ báo cơ quan”.</td>
+            <td data-label="Mục"><a href="#nguon-5">5</a></td>
+          </tr>
+          <tr><th colspan="5" scope="rowgroup">Bốn ô trong bảng ví dụ mục 4. Không phải cả bảng.</th></tr>
+          <tr>
+            <th class="code" scope="row">4-1</th>
+            <td data-label="Điều kiện">Tỷ lệ phản hồi trong vòng 24h ở mức thấp.</td>
+            <td class="num" data-label="Hệ quả">1</td>
+            <td class="exc" data-label="Ngoại lệ">Ô này là một mức cố định, không phải khoảng. Vi phạm lặp lại có thể bị nhiều điểm hơn. Danh sách là ví dụ.</td>
+            <td data-label="Mục"><a href="#nguon-4">4</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">4-2</th>
+            <td data-label="Điều kiện">Tỷ lệ trả hàng/hoàn tiền do lỗi của người bán ở mức cao.</td>
+            <td class="num" data-label="Hệ quả">2</td>
+            <td class="exc" data-label="Ngoại lệ">Cũng là một mức cố định. Tóm tắt mục gom các mức cố định là 1, 2 hoặc 48.</td>
+            <td data-label="Mục"><a href="#nguon-4">4</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">4-r</th>
+            <td data-label="Điều kiện">Hàng nhái.</td>
+            <td class="num" data-label="Hệ quả">0-4</td>
+            <td class="exc" data-label="Ngoại lệ">Đây là khoảng, viết 0-4 trong toàn văn. Tóm tắt cả trang viết 0–4. Không rút thành một số ở giữa khoảng.</td>
+            <td data-label="Mục"><a href="#nguon-4">4</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">4-48</th>
+            <td data-label="Điều kiện">Nội dung không nguyên bản.</td>
+            <td class="num" data-label="Hệ quả">48</td>
+            <td class="empty" data-label="Ngoại lệ">Ô nguồn chỉ ghi 48. Không ghi khoảng cho riêng dòng này.</td>
+            <td data-label="Mục"><a href="#nguon-4">4</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">4-p7</th>
+            <td data-label="Điều kiện">Câu dẫn của bảng điểm.</td>
+            <td data-label="Hệ quả">Câu nguồn bảo xem phần 7 cho hành động thực thi, có thể gồm vô hiệu hóa tài khoản.</td>
+            <td class="exc" data-label="Ngoại lệ">Phần 7 trên cùng trang là tạm giữ số dư. Tóm tắt mục ghi danh sách ví dụ hành động thực thi là mục 6. Giữ cả hai hướng, không sửa câu nguồn thành “xem mục 6”.</td>
+            <td data-label="Mục"><a href="#nguon-4">4</a></td>
+          </tr>
+          <tr><th colspan="5" scope="rowgroup">Giữ số dư và kháng nghị</th></tr>
+          <tr>
+            <th class="code" scope="row">7a</th>
+            <td data-label="Điều kiện">Muốn kháng nghị việc tạm giữ số dư.</td>
+            <td data-label="Hệ quả">Câu nguồn: nộp theo mục 9 dưới đây. Kháng nghị thành công thì được trả lại tiền.</td>
+            <td class="exc" data-label="Ngoại lệ">Phần kháng nghị trên cùng trang được đánh số mục 8, không phải mục 9.</td>
+            <td data-label="Mục"><a href="#nguon-7">7</a></td>
+          </tr>
+          <tr>
+            <th class="code" scope="row">8.1b</th>
+            <td data-label="Điều kiện">Kháng nghị một hành động thực thi.</td>
+            <td data-label="Hệ quả">Tối đa hai lần. Trong 30 ngày kể từ ngày nhận thông báo, người bán phải nộp lần đầu. Phải nộp lần hai trong mười lăm (15) ngày kể từ ngày lần đầu bị từ chối.</td>
+            <td class="exc" data-label="Ngoại lệ">Sau mốc, người bán không được nộp nữa; đơn không hợp lệ và không được xét. Tóm tắt mục bỏ chữ “phải” và chỉ viết “15 ngày”.</td>
+            <td data-label="Mục"><a href="#nguon-81">8.1</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <section class="prose" aria-labelledby="sau-bang">
+      <h2 id="sau-bang">Đoạn nguồn phía sau bảng</h2>
+      <p class="dek">Bảng là lớp soát. Các đoạn dưới là câu đã dùng để lập dòng, giữ nguyên cách viết trong toàn văn.</p>
+      <article class="block" id="nguon-2">
+        <h3>Mục 2</h3>
+        <p>Điểm tình trạng tài khoản (AHR) bị trừ do vi phạm sẽ được tự động xóa sau mỗi <strong>90</strong> ngày trừ khi cửa hàng của Người bán đã bị nền tảng đóng, tức là Điểm tình trạng tài khoản (AHR) = 0.</p>
+        <p>Nền tảng có thể thực hiện bất kỳ hành động khắc phục và kiểm soát bổ sung cần thiết nào ngoài việc trừ điểm AHR.</p>
+      </article>
+      <article class="block" id="nguon-4">
+        <h3>Mục 4</h3>
+        <p>Bảng sau đây trình bày danh sách một số hành động vi phạm chính sách có thể khiến người bán nhận được điểm AHR và phải chịu các hành động thực thi (xem phần 7), có thể bao gồm cả hình phạt vô hiệu hóa tài khoản. Chúng tôi có thể áp dụng nhiều điểm AHR hơn và triển khai các hành động thực thi nghiêm khắc hơn đối với những vi phạm lặp lại.</p>
+        <p>Tỷ lệ phản hồi trong vòng 24h ở mức thấp: 1. Tỷ lệ trả hàng/hoàn tiền do lỗi của người bán ở mức cao: 2. Hàng nhái: 0-4. Nội dung không nguyên bản: 48.</p>
+      </article>
+      <article class="block" id="nguon-5">
+        <h3>Mục 5</h3>
+        <p>Khi xảy ra hành vi động phạm các chính sách và nguyên tắc của chúng tôi, Nền tảng có quyền triển khai các hành động thực thi khắc phục cần thiết đối với người bán. Người bán tích lũy một số điểm AHR nhất định sẽ đạt đến các ngưỡng thực thi khác nhau.</p>
+        <p>Nền tảng có thể triển khai nhiều hành động thực thi, tùy theo hình thức vi phạm của người bán.</p>
+        <p>Nền tảng sẽ gửi thông báo cảnh báo chính thức cho người bán khi số điểm AHR của họ còn cách mỗi ngưỡng thực thi 5 điểm.</p>
+        <p><strong>Ngưỡng 12.</strong> Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (7) ngày theo lịch. Người bán sẽ không thể đăng ký Chương trình liên kết (7) ngày theo lịch.</p>
+        <p><strong>Ngưỡng 24.</strong> Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (14) ngày theo lịch. Người bán sẽ không thể đăng ký Chương trình liên kết (14) ngày theo lịch. Tạm ngưng khả năng tạo và cập nhật danh sách niêm yết mới trong (14) ngày theo lịch.</p>
+        <p><strong>Ngưỡng 36.</strong> Nền tảng sẽ vô hiệu hóa cửa hàng của người bán trong (28) ngày theo lịch. Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (42) ngày theo lịch.</p>
+        <p><strong>Ngưỡng 48.</strong> Nền tảng sẽ vĩnh viễn chấm dứt cửa hàng của người bán. Nền tảng có thể bắt đầu triển khai hành động pháp lý đối với người bán và/hoặc báo cáo người bán với cơ quan quản lý có liên quan</p>
+      </article>
+      <article class="block" id="nguon-7">
+        <h3>Mục 7</h3>
+        <p>Người bán có thể nộp đơn kháng nghị đối với hành động thực thi này theo mục 9 dưới đây.</p>
+        <p>Nếu kháng nghị thành công, Nền tảng sẽ trả lại tiền cho người bán.</p>
+      </article>
+      <article class="block" id="nguon-81">
+        <h3>Mục 8.1</h3>
+        <p>Người bán có thể gửi tối đa hai kháng nghị đối với một hành động thực thi.</p>
+        <p>Trong vòng 30 ngày kể từ ngày nhận được thông báo về hành động thực thi, Người bán <span class="verb">phải</span> nộp kháng nghị đầu tiên. <span class="verb">Phải</span> nộp kháng nghị thứ hai trong vòng mười lăm (15) ngày kể từ ngày từ chối kháng nghị đầu tiên. Sau thời gian này, người bán không được phép nộp kháng nghị nữa.</p>
+        <p>Điểm AHR phát sinh từ mỗi hành động vi phạm sẽ được xóa tự động sau 90 ngày theo lịch, trừ khi Người bán đã tích lũy đủ 48 điểm.</p>
+        <p>Tất cả các kháng nghị được đưa ra sau các mốc thời gian quy định ở trên không phải là kháng nghị hợp lệ và sẽ không được Nền tảng xem xét.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

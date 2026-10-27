@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bản xem thử: tóm tắt trước, câu nguồn mở sau</title>
+  <style>
+    :root {
+      --wall: #d9deea;
+      --sheet: #f7f8fb;
+      --ink: #1a2333;
+      --navy: #1e3a6e;
+      --muted: #556178;
+      --line: #d3dae8;
+      --quote: #eef2f8;
+      --focus: #1e3a6e;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--wall);
+      color: var(--ink);
+      font-family: "Segoe UI", "Segoe UI Variable", Tahoma, sans-serif;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+    .skip { position: absolute; left: 0.75rem; top: -3rem; background: #fff; padding: 0.4rem 0.7rem; z-index: 20; }
+    .skip:focus { top: 0.5rem; }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+    a { color: var(--navy); }
+    .bar { background: var(--navy); color: #f4f7ff; padding: 0.7rem 1.25rem 0.85rem; }
+    .bar a { color: #d5e2ff; }
+    .bar a[aria-current="page"] { color: #fff; text-decoration: none; border-bottom: 2px solid #f0d7a2; }
+    .bar-inner, .memo { max-width: 1080px; margin: 0 auto; }
+    .kicker { margin: 0 0 0.35rem; font-size: 0.78rem; letter-spacing: 0.03em; }
+    .bar-row { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: baseline; justify-content: space-between; }
+    .brand { margin: 0; font-family: Cambria, "Palatino Linotype", "Times New Roman", serif; font-size: 1.45rem; font-weight: 400; }
+    .nav { display: flex; flex-wrap: wrap; gap: 0.45rem 0.9rem; margin: 0; padding: 0; list-style: none; }
+    .memo { padding: 1.5rem 1.25rem 3rem; }
+    .sheet { background: var(--sheet); padding: clamp(1.1rem, 3vw, 2.2rem); }
+    .meta { margin: 0 0 0.8rem; color: var(--muted); font-size: 0.95rem; }
+    h1 { font-family: Cambria, "Palatino Linotype", "Times New Roman", serif; font-weight: 400; font-size: clamp(1.9rem, 4vw, 2.7rem); line-height: 1.15; margin: 0 0 0.8rem; letter-spacing: -0.02em; }
+    .caution { margin: 0 0 1.25rem; max-width: 68ch; padding-left: 0.85rem; border-left: 4px solid var(--navy); }
+    .proof { margin: 0 0 1.5rem; }
+    .proof-label, h2 { font-family: Bahnschrift, "Segoe UI", sans-serif; font-weight: 600; letter-spacing: -0.02em; }
+    .proof-label { margin: 0 0 0.6rem; color: var(--navy); font-size: 0.85rem; }
+    .sent { font-family: Cambria, "Palatino Linotype", "Times New Roman", serif; font-size: clamp(1.25rem, 2.4vw, 1.65rem); line-height: 1.35; margin: 0 0 0.85rem; }
+    .tag { display: block; font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 0.78rem; letter-spacing: 0.04em; color: var(--navy); margin-bottom: 0.2rem; }
+    .m2 { box-shadow: inset 0 -3px 0 #9eb0d4; }
+    .m8 { box-shadow: inset 0 -3px 0 #1e3a6e; }
+    h2 { font-size: 1.15rem; margin: 1.4rem 0 0.7rem; }
+    .miles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); margin: 0 0 1rem; }
+    .miles section { padding: 0.85rem 0.9rem 1rem 0; margin-right: 0.9rem; border-left: 1px solid var(--line); padding-left: 0.9rem; }
+    .miles section:first-child { border-left: 0; padding-left: 0; }
+    .n { font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 1.8rem; line-height: 1; margin: 0 0 0.4rem; color: var(--navy); font-weight: 600; letter-spacing: -0.03em; }
+    .miles p { margin: 0; font-size: 0.95rem; }
+    .also { margin: 0.4rem 0 0; max-width: 70ch; }
+    .hint { margin: 0 0 0.4rem; color: var(--muted); max-width: 68ch; }
+    details { border-top: 1px solid var(--line); padding: 0.85rem 0 0.95rem; }
+    details:last-of-type { border-bottom: 1px solid var(--line); }
+    summary { cursor: pointer; list-style: none; display: grid; grid-template-columns: 4.6rem minmax(0, 1fr) auto; gap: 0.75rem; align-items: baseline; }
+    summary::-webkit-details-marker { display: none; }
+    .sec { font-family: Bahnschrift, "Segoe UI", sans-serif; color: var(--navy); font-weight: 600; }
+    .ctl { color: var(--navy); text-decoration: underline; text-underline-offset: 0.18em; white-space: nowrap; }
+    details .when-open { display: none; }
+    details[open] .when-closed { display: none; }
+    details[open] .when-open { display: inline; }
+    .always { margin: 0; padding: 0 0 0.85rem; color: var(--navy); font-size: 0.98rem; }
+    blockquote { margin: 0.75rem 0 0 5.35rem; padding: 0.75rem 0.9rem; background: var(--quote); border-left: 3px solid var(--navy); }
+    blockquote p { margin: 0 0 0.55rem; }
+    blockquote p:last-child { margin-bottom: 0; }
+    .verb { font-weight: 700; }
+    @media (max-width: 860px) {
+      .miles { grid-template-columns: 1fr; }
+      .miles section { margin: 0; padding: 0.85rem 0; border-left: 0; border-top: 1px solid var(--line); }
+      .miles section:first-child { border-top: 0; }
+      summary { grid-template-columns: 1fr; gap: 0.25rem; }
+      blockquote { margin-left: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#noi-dung">Tới nội dung</a>
+  <header class="bar">
+    <div class="bar-inner">
+      <p class="kicker">Bản xem thử · không phải trang chính sách · không sửa bản ghi</p>
+      <div class="bar-row">
+        <p class="brand">Tóm tắt trước</p>
+        <ul class="nav">
+          <li><a href="01-doc-song-song.html">Đọc song song</a></li>
+          <li><a href="02-tom-tat-truoc.html" aria-current="page">Tóm tắt trước</a></li>
+          <li><a href="03-bang-quy-tac.html">Bảng quy tắc</a></li>
+          <li><a href="cach-trinh-bay.md">Ghi chú cách trình bày</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  <main class="memo" id="noi-dung">
+    <article class="sheet">
+      <p class="meta">Trích tóm tắt cả trang · 22/09/2026 · knowledge_id 8623594494494465 · <a href="https://seller-vn.tiktok.com/university/essay?knowledge_id=8623594494494465&amp;role=1&amp;course_type=1&amp;from=search&amp;identity=1&amp;lang=vi-VN">trang nguồn</a></p>
+      <h1>Đọc bản rút trước. Câu gốc nằm dưới mỗi dòng.</h1>
+      <p class="caution">Hai câu 90 ngày được in ngay dưới đây, trước mọi chỗ bấm. Hướng dẫn GOV.UK về thành phần Details nói một số người không mở phần bị gấp, vì tưởng đó là liên kết rời trang. Nếu bản rút phía trên chỉ còn một câu 90 ngày, cách bố cục này sẽ giấu câu kia.</p>
+      <div class="proof">
+        <p class="proof-label">Tóm tắt cả trang, hai câu không gộp</p>
+        <p class="sent m2"><span class="tag">Mục 2 · chữ trừ điểm</span>Điểm bị trừ tự xóa sau mỗi 90 ngày, trừ khi cửa hàng đã bị nền tảng đóng, tức AHR = 0.</p>
+        <p class="sent m8"><span class="tag">Mục 8.1 · trong phần kháng nghị</span>Điểm phát sinh từ mỗi vi phạm tự xóa sau 90 ngày theo lịch, trừ khi đã tích lũy đủ 48 điểm.</p>
+      </div>
+      <h2>Ngưỡng theo chữ “tích lũy” ở mục 5</h2>
+      <div class="miles">
+        <section>
+          <p class="n">12</p>
+          <p>Không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và lợi ích khác trong 7 ngày theo lịch; không đăng ký Chương trình liên kết trong 7 ngày theo lịch.</p>
+        </section>
+        <section>
+          <p class="n">24</p>
+          <p>Hai hạn chế trên trong 14 ngày theo lịch; tạm ngưng tạo và cập nhật danh sách niêm yết mới trong 14 ngày theo lịch.</p>
+        </section>
+        <section>
+          <p class="n">36</p>
+          <p>Vô hiệu hóa cửa hàng trong 28 ngày theo lịch; không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và lợi ích khác trong 42 ngày theo lịch.</p>
+        </section>
+        <section>
+          <p class="n">48</p>
+          <p>Chấm dứt cửa hàng vĩnh viễn; có thể hành động pháp lý và/hoặc báo cơ quan quản lý.</p>
+        </section>
+      </div>
+      <p class="also">Thông báo cảnh báo chính thức được gửi khi điểm AHR còn cách mỗi ngưỡng 5 điểm. Có thể áp dụng nhiều hành động thực thi, tùy hình thức vi phạm.</p>
+      <p class="also">Trang ghi kháng nghị việc giữ tiền theo mục 9. Phần kháng nghị trên trang được đánh số mục 8. Kháng nghị việc giữ tiền thành công thì được trả lại tiền.</p>
+      <p class="also">Tỷ lệ phản hồi 24 giờ thấp: 1 điểm. Hàng nhái: 0–4 điểm. Tóm tắt cả trang dùng dấu gạch ngang dài ở 0–4. Bảng toàn văn viết 0-4.</p>
+      <p class="also">Kháng nghị: tối đa hai lần. Tóm tắt cả trang viết “Lần đầu trong 30 ngày kể từ ngày nhận thông báo. Lần hai trong 15 ngày kể từ ngày lần đầu bị từ chối.” Câu này không còn chữ “phải”.</p>
+
+      <h2>Từng quy tắc</h2>
+      <p class="hint">Dòng nhìn thấy là tóm tắt mục. Phần mở ra chỉ là câu toàn văn của dòng đó. Ba chỗ dễ đọc sai được để mở sẵn.</p>
+
+      <details id="mo-2" open>
+        <summary>
+          <span class="sec">Mục 2</span>
+          <span>Điểm bị trừ do vi phạm tự xóa sau mỗi 90 ngày, trừ khi cửa hàng đã bị nền tảng đóng, tức AHR = 0. Có thể có hành động khắc phục khác ngoài việc trừ điểm.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Điểm tình trạng tài khoản (AHR) bị trừ do vi phạm sẽ được tự động xóa sau mỗi <strong>90</strong> ngày trừ khi cửa hàng của Người bán đã bị nền tảng đóng, tức là Điểm tình trạng tài khoản (AHR) = 0.</p>
+          <p>Nền tảng có thể thực hiện bất kỳ hành động khắc phục và kiểm soát bổ sung cần thiết nào ngoài việc trừ điểm AHR.</p>
+        </blockquote>
+      </details>
+
+      <details id="mo-81" open>
+        <summary>
+          <span class="sec">Mục 8.1</span>
+          <span>Điểm AHR phát sinh từ mỗi vi phạm tự xóa sau 90 ngày theo lịch, trừ khi người bán đã tích lũy đủ 48 điểm. Câu này nằm trong quy trình kháng nghị, không nằm ở mục 2.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Điểm AHR phát sinh từ mỗi hành động vi phạm sẽ được xóa tự động sau 90 ngày theo lịch, trừ khi Người bán đã tích lũy đủ 48 điểm.</p>
+        </blockquote>
+      </details>
+
+      <details>
+        <summary>
+          <span class="sec">Mục 5</span>
+          <span>Câu mở đầu dùng chữ tích lũy. Toàn văn viết “hành vi động phạm”. Tóm tắt không đổi chữ đó.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Khi xảy ra hành vi động phạm các chính sách và nguyên tắc của chúng tôi, Nền tảng có quyền triển khai các hành động thực thi khắc phục cần thiết đối với người bán. Người bán tích lũy một số điểm AHR nhất định sẽ đạt đến các ngưỡng thực thi khác nhau. Tại các ngưỡng đó, Nền tảng sẽ triển khai Hành động thực thi đối với tài khoản của họ dựa trên số điểm tích lũy.</p>
+          <p>Nền tảng có thể triển khai nhiều hành động thực thi, tùy theo hình thức vi phạm của người bán.</p>
+        </blockquote>
+      </details>
+
+      <details>
+        <summary>
+          <span class="sec">12 điểm</span>
+          <span>Không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và lợi ích khác trong 7 ngày theo lịch. Không đăng ký Chương trình liên kết trong 7 ngày theo lịch.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (7) ngày theo lịch.</p>
+          <p>Người bán sẽ không thể đăng ký Chương trình liên kết (7) ngày theo lịch.</p>
+        </blockquote>
+      </details>
+
+      <details>
+        <summary>
+          <span class="sec">24 điểm</span>
+          <span>Hai hạn chế trên trong 14 ngày theo lịch. Tạm ngưng tạo và cập nhật danh sách niêm yết mới trong 14 ngày theo lịch.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (14) ngày theo lịch.</p>
+          <p>Người bán sẽ không thể đăng ký Chương trình liên kết (14) ngày theo lịch.</p>
+          <p>Tạm ngưng khả năng tạo và cập nhật danh sách niêm yết mới trong (14) ngày theo lịch.</p>
+        </blockquote>
+      </details>
+      <p class="always">Dòng 24 ở trên viết “hai hạn chế trên”. Câu đó chỉ đọc được nếu dòng 12 điểm còn ở trên. Câu nguồn không viết tắt: nó nhắc lại cả hai hạn chế, rồi thêm ngưng niêm yết. Mở dòng để thấy đủ chữ.</p>
+
+      <details>
+        <summary>
+          <span class="sec">36 điểm</span>
+          <span>Vô hiệu hóa cửa hàng trong 28 ngày theo lịch. Không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và lợi ích khác trong 42 ngày theo lịch.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Nền tảng sẽ vô hiệu hóa cửa hàng của người bán trong (28) ngày theo lịch.</p>
+          <p>Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (42) ngày theo lịch.</p>
+        </blockquote>
+      </details>
+      <p class="always">Dòng nguồn của ngưỡng 36 không nhắc đăng ký Chương trình liên kết, và không nhắc ngưng tạo niêm yết. Hai việc đó nằm ở ngưỡng 12 và 24.</p>
+
+      <details>
+        <summary>
+          <span class="sec">48 điểm</span>
+          <span>Chấm dứt cửa hàng vĩnh viễn. Có thể bắt đầu hành động pháp lý và/hoặc báo cơ quan quản lý.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Nền tảng sẽ vĩnh viễn chấm dứt cửa hàng của người bán.</p>
+          <p>Nền tảng có thể bắt đầu triển khai hành động pháp lý đối với người bán và/hoặc báo cáo người bán với cơ quan quản lý có liên quan</p>
+        </blockquote>
+      </details>
+
+      <details>
+        <summary>
+          <span class="sec">Mục 5</span>
+          <span>Thông báo cảnh báo chính thức khi điểm AHR còn cách mỗi ngưỡng 5 điểm.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Nền tảng sẽ gửi thông báo cảnh báo chính thức cho người bán khi số điểm AHR của họ còn cách mỗi ngưỡng thực thi 5 điểm.</p>
+        </blockquote>
+      </details>
+
+      <details>
+        <summary>
+          <span class="sec">Mục 4</span>
+          <span>Tỷ lệ phản hồi trong vòng 24h ở mức thấp: 1 điểm, một mức cố định. Hàng nhái: khoảng 0-4. Bảng là ví dụ. Câu dẫn ghi xem phần 7.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Bảng sau đây trình bày danh sách một số hành động vi phạm chính sách có thể khiến người bán nhận được điểm AHR và phải chịu các hành động thực thi (xem phần 7), có thể bao gồm cả hình phạt vô hiệu hóa tài khoản. Chúng tôi có thể áp dụng nhiều điểm AHR hơn và triển khai các hành động thực thi nghiêm khắc hơn đối với những vi phạm lặp lại.</p>
+          <p>Tỷ lệ phản hồi trong vòng 24h ở mức thấp — 1</p>
+          <p>Tỷ lệ trả hàng/hoàn tiền do lỗi của người bán ở mức cao — 2</p>
+          <p>Hàng nhái — 0-4</p>
+          <p>Nội dung không nguyên bản — 48</p>
+        </blockquote>
+      </details>
+      <p class="always">Tóm tắt mục nói phần 7 là tạm giữ số dư. Danh sách ví dụ hành động thực thi là mục 6. Câu nguồn vẫn ghi “(xem phần 7)”.</p>
+
+      <details id="mo-9" open>
+        <summary>
+          <span class="sec">Mục 7</span>
+          <span>Trang ghi kháng nghị việc giữ tiền theo mục 9. Phần kháng nghị trên cùng trang được đánh số mục 8. Thành công thì được trả lại tiền.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Người bán có thể nộp đơn kháng nghị đối với hành động thực thi này theo mục 9 dưới đây.</p>
+          <p>Nếu kháng nghị thành công, Nền tảng sẽ trả lại tiền cho người bán.</p>
+        </blockquote>
+      </details>
+
+      <details id="mo-phai" open>
+        <summary>
+          <span class="sec">Mục 8.1</span>
+          <span>Tối đa hai lần. Lần đầu trong 30 ngày kể từ ngày nhận thông báo. Lần hai trong 15 ngày kể từ ngày lần đầu bị từ chối. Đơn muộn không hợp lệ và không được xét.</span>
+          <span class="ctl"><span class="when-closed">Hiện câu nguồn</span><span class="when-open">Ẩn câu nguồn</span></span>
+        </summary>
+        <blockquote>
+          <p>Người bán có thể gửi tối đa hai kháng nghị đối với một hành động thực thi.</p>
+          <p>Trong vòng 30 ngày kể từ ngày nhận được thông báo về hành động thực thi, Người bán <span class="verb">phải</span> nộp kháng nghị đầu tiên. <span class="verb">Phải</span> nộp kháng nghị thứ hai trong vòng mười lăm (15) ngày kể từ ngày từ chối kháng nghị đầu tiên. Sau thời gian này, người bán không được phép nộp kháng nghị nữa.</p>
+          <p>Tất cả các kháng nghị được đưa ra sau các mốc thời gian quy định ở trên không phải là kháng nghị hợp lệ và sẽ không được Nền tảng xem xét.</p>
+        </blockquote>
+      </details>
+      <p class="always">Dòng tóm tắt không có chữ “phải”. Câu nguồn có hai lần: “phải nộp” và “Phải nộp”.</p>
+    </article>
+  </main>
+</body>
+</html>

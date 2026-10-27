@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bản xem thử: đối chiếu từng mục</title>
+  <style>
+    :root {
+      --bg: #d5e3e4;
+      --ink: #142326;
+      --muted: #3d5554;
+      --stamp: #0e4f4c;
+      --stamp-ink: #f4fffd;
+      --bar: #0c3f3c;
+      --note: #e6f3f1;
+      --source: #fffaf3;
+      --sheet: #f4fafa;
+      --line: #c3d4d3;
+      --u2: #0e5c58;
+      --u8: #8d1d2c;
+      --conflict: #f8e6e8;
+      --focus: #8d1d2c;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", "Segoe UI Variable", Tahoma, sans-serif;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+    .skip {
+      position: absolute;
+      left: 0.75rem;
+      top: -3rem;
+      background: #fff;
+      color: var(--ink);
+      padding: 0.4rem 0.7rem;
+      z-index: 20;
+    }
+    .skip:focus { top: 0.5rem; }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+    a { color: inherit; }
+    .bar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: var(--bar);
+      color: var(--stamp-ink);
+      padding: 0.7rem 1.25rem 0.85rem;
+    }
+    .bar-inner, .wrap { max-width: 1180px; margin: 0 auto; }
+    .kicker {
+      margin: 0 0 0.35rem;
+      font-family: Bahnschrift, "Segoe UI", sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+    }
+    .bar-row { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: baseline; justify-content: space-between; }
+    .brand { margin: 0; font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.03em; }
+    .nav { display: flex; flex-wrap: wrap; gap: 0.45rem 0.9rem; margin: 0; padding: 0; list-style: none; font-size: 0.95rem; }
+    .nav a { color: #d7f4f0; text-underline-offset: 0.18em; }
+    .nav a[aria-current="page"] { color: #fff; text-decoration: none; border-bottom: 2px solid #f0c7cb; }
+    .wrap { padding: 1.25rem 1.25rem 3rem; }
+    h1 { font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: clamp(1.7rem, 3vw, 2.35rem); line-height: 1.15; letter-spacing: -0.03em; font-weight: 600; margin: 0 0 0.6rem; }
+    .dek { margin: 0 0 1rem; max-width: 68ch; }
+    .meta { margin: 0 0 1rem; color: var(--muted); font-size: 0.95rem; }
+    .meta a { color: var(--stamp); }
+    .jumps { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 1rem; padding: 0; list-style: none; }
+    .jumps a { display: inline-block; background: var(--sheet); color: var(--stamp); text-decoration: none; padding: 0.28rem 0.55rem; border: 1px solid var(--line); }
+    .jumps a:hover { border-color: var(--stamp); }
+    .clash {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: var(--conflict);
+      border-left: 6px solid var(--u8);
+      margin: 0 0 1.25rem;
+    }
+    .clash h2 { grid-column: 1 / -1; margin: 0; padding: 0.85rem 1rem 0; font-size: 1.05rem; }
+    .clash p { margin: 0; padding: 0.7rem 1rem 1rem; }
+    .clash .side-a { box-shadow: inset 0 -3px 0 var(--u2); }
+    .clash .side-b { box-shadow: inset 0 -3px 0 var(--u8); }
+    .sheet { background: var(--sheet); border: 1px solid var(--line); }
+    .band {
+      display: grid;
+      grid-template-columns: 4.75rem minmax(0, 1fr) minmax(0, 1.12fr);
+      border-top: 1px solid var(--line);
+    }
+    .band:first-child { border-top: 0; }
+    .stamp {
+      background: var(--stamp);
+      color: var(--stamp-ink);
+      font-family: Bahnschrift, "Segoe UI", sans-serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      display: flex;
+      justify-content: center;
+      padding: 1rem 0.25rem 0;
+      text-align: center;
+    }
+    .note { background: var(--note); }
+    .source { background: var(--source); }
+    .note, .source { padding: 0.95rem 1rem 1.1rem; min-width: 0; }
+    .col-label {
+      margin: 0 0 0.4rem;
+      font-family: Bahnschrift, "Segoe UI", sans-serif;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .note p, .source p, .note li, .source li { margin: 0 0 0.55rem; }
+    .note ul, .source ul { margin: 0; padding-left: 1.15rem; }
+    .cross { margin: 0.7rem 0 0; font-size: 0.95rem; }
+    .cross a { color: var(--u8); }
+    .u2 { border-bottom: 2px solid var(--u2); }
+    .u8 { border-bottom: 2px solid var(--u8); }
+    .verb { border-bottom: 2px solid var(--u8); font-weight: 650; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+    th, td { text-align: left; vertical-align: top; padding: 0.45rem 0.4rem; border-bottom: 1px solid var(--line); }
+    th { font-weight: 650; }
+    .points td:last-child, .points th:last-child { width: 4.5rem; font-variant-numeric: tabular-nums; font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 1.15rem; }
+    .miles td:last-child, .miles th:last-child { width: 3.2rem; font-family: Bahnschrift, "Segoe UI", sans-serif; font-size: 1.2rem; font-weight: 600; }
+    @media (min-width: 980px) {
+      .note-inner { position: sticky; top: 5.4rem; }
+    }
+    @media (max-width: 979px) {
+      .band { grid-template-columns: 4.2rem minmax(0, 1fr); }
+      .stamp { grid-row: span 2; }
+      .source { grid-column: 2; border-top: 1px dashed var(--line); }
+    }
+    @media (max-width: 720px) {
+      .clash { grid-template-columns: 1fr; }
+      .band { grid-template-columns: 1fr; }
+      .stamp { grid-row: auto; justify-content: flex-start; padding: 0.45rem 0.8rem; font-size: 1.15rem; }
+      .source { grid-column: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#noi-dung">Tới nội dung</a>
+  <header class="bar">
+    <div class="bar-inner">
+      <p class="kicker">Bản xem thử · không phải trang chính sách · không sửa bản ghi</p>
+      <div class="bar-row">
+        <p class="brand">Phiếu đối chiếu</p>
+        <ul class="nav">
+          <li><a href="01-doc-song-song.html" aria-current="page">Đọc song song</a></li>
+          <li><a href="02-tom-tat-truoc.html">Tóm tắt trước</a></li>
+          <li><a href="03-bang-quy-tac.html">Bảng quy tắc</a></li>
+          <li><a href="cach-trinh-bay.md">Ghi chú cách trình bày</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  <main class="wrap" id="noi-dung">
+    <p class="meta">Chính sách đánh giá hiệu suất của người bán · ngày trên bài 22/09/2026 · knowledge_id 8623594494494465 · <a href="https://seller-vn.tiktok.com/university/essay?knowledge_id=8623594494494465&amp;role=1&amp;course_type=1&amp;from=search&amp;identity=1&amp;lang=vi-VN">trang nguồn</a></p>
+    <h1>Tóm tắt mục đứng cạnh câu toàn văn</h1>
+    <p class="dek">Cột trái là câu trong <code>tom-tat-tung-muc.md</code>. Cột phải là câu trong <code>toan-van.md</code>. Hai cột cùng một mục. Gạch chân lục là cách viết mục 2. Gạch chân đỏ là cách viết mục 8.1, hoặc chữ chỉ còn ở toàn văn.</p>
+    <ul class="jumps">
+      <li><a href="#muc-2">Mục 2</a></li>
+      <li><a href="#muc-4">Mục 4 · ô điểm</a></li>
+      <li><a href="#muc-5">Mục 5 · ngưỡng</a></li>
+      <li><a href="#muc-7">Mục 7 · mục 9</a></li>
+      <li><a href="#muc-81">Mục 8.1 · phải</a></li>
+    </ul>
+    <section class="clash" aria-labelledby="hai-cau">
+      <h2 id="hai-cau">Cùng việc xóa điểm, hai câu. Đừng gộp.</h2>
+      <p class="side-a"><a href="#muc-2">Mục 2</a>, chữ “trừ điểm”: tự xóa <span class="u2">sau mỗi 90 ngày</span>, trừ khi cửa hàng đã bị nền tảng đóng, tức <span class="u2">AHR = 0</span>.</p>
+      <p class="side-b"><a href="#muc-81">Mục 8.1</a>, nằm trong quy trình kháng nghị: tự xóa sau <span class="u8">90 ngày theo lịch</span>, trừ khi đã tích lũy đủ <span class="u8">48 điểm</span>.</p>
+    </section>
+    <div class="sheet">
+      <section class="band" id="muc-2">
+        <div class="stamp">2</div>
+        <div class="note">
+          <div class="note-inner">
+            <p class="col-label">Tóm tắt mục</p>
+            <p>Mục này dùng chữ trừ điểm. Điểm AHR bị trừ khi vi phạm; số điểm bị trừ theo mức độ nghiêm trọng và tác động. Khi điểm AHR đạt ngưỡng ở mục 5, nền tảng thực hiện hành động thực thi tương ứng.</p>
+            <p>Điểm bị trừ do vi phạm tự xóa <span class="u2">sau mỗi 90 ngày</span>, trừ khi cửa hàng đã bị nền tảng đóng, tức <span class="u2">AHR = 0</span>. Nền tảng có thể áp dụng hành động khắc phục và kiểm soát khác ngoài việc trừ điểm.</p>
+            <p class="cross"><a href="#muc-81">Câu 90 ngày thứ hai nằm ở mục 8.1, không nằm ở đây.</a></p>
+          </div>
+        </div>
+        <div class="source">
+          <p class="col-label">Toàn văn</p>
+          <p>Điểm tình trạng tài khoản (AHR) bị trừ theo cách thức như sau:</p>
+          <ul>
+            <li>Điểm tình trạng tài khoản (AHR) bị trừ khi vi phạm các chính sách của chúng tôi.</li>
+            <li>Số điểm AHR bị trừ tương ứng với mức độ nghiêm trọng và tác động của các vi phạm chính sách.</li>
+            <li>Khi điểm tình trạng tài khoản (AHR) của Người bán đạt đến các ngưỡng được quy định trong Mục 5 dưới đây, Nền tảng sẽ thực hiện hành động thực thi tương ứng.</li>
+            <li>Điểm tình trạng tài khoản (AHR) bị trừ do vi phạm sẽ được tự động xóa sau mỗi <strong>90</strong> ngày trừ khi cửa hàng của Người bán đã bị nền tảng đóng, tức là Điểm tình trạng tài khoản (AHR) = 0.</li>
+            <li>Nền tảng có thể thực hiện bất kỳ hành động khắc phục và kiểm soát bổ sung cần thiết nào ngoài việc trừ điểm AHR.</li>
+          </ul>
+        </div>
+      </section>
+      <section class="band" id="muc-4">
+        <div class="stamp">4</div>
+        <div class="note">
+          <div class="note-inner">
+            <p class="col-label">Tóm tắt mục</p>
+            <p>Bảng là ví dụ. Trong bảng điểm, một số ô là khoảng và một số ô là một mức cố định (1, 2 hoặc 48). Trang ghi xem phần 7. Phần 7 trên trang là tạm giữ số dư. Danh sách ví dụ hành động thực thi là mục 6.</p>
+            <p>Bốn ô dưới đây không phải cả bảng. Tóm tắt cả trang ghi hàng nhái là 0–4 điểm, có dấu gạch ngang dài. Toàn văn viết 0-4.</p>
+          </div>
+        </div>
+        <div class="source">
+          <p class="col-label">Toàn văn</p>
+          <p>Bảng sau đây trình bày danh sách một số hành động vi phạm chính sách có thể khiến người bán nhận được điểm AHR và phải chịu các hành động thực thi (xem phần 7), có thể bao gồm cả hình phạt vô hiệu hóa tài khoản. Chúng tôi có thể áp dụng nhiều điểm AHR hơn và triển khai các hành động thực thi nghiêm khắc hơn đối với những vi phạm lặp lại.</p>
+          <table class="points">
+            <caption class="col-label">Bốn ô trích từ bảng mục 4</caption>
+            <thead>
+              <tr><th scope="col">Lý do vi phạm</th><th scope="col">Điểm AHR</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Tỷ lệ phản hồi trong vòng 24h ở mức thấp</td><td>1</td></tr>
+              <tr><td>Tỷ lệ trả hàng/hoàn tiền do lỗi của người bán ở mức cao</td><td>2</td></tr>
+              <tr><td>Hàng nhái</td><td>0-4</td></tr>
+              <tr><td>Nội dung không nguyên bản</td><td>48</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="band" id="muc-5">
+        <div class="stamp">5</div>
+        <div class="note">
+          <div class="note-inner">
+            <p class="col-label">Tóm tắt mục</p>
+            <p>Mục này dùng chữ tích lũy: người bán tích lũy điểm AHR đến ngưỡng, rồi bị hành động thực thi theo số điểm tích lũy. Có thể áp dụng nhiều hành động thực thi, tùy hình thức vi phạm. Nền tảng gửi thông báo cảnh báo chính thức khi điểm AHR còn cách mỗi ngưỡng 5 điểm.</p>
+            <ul>
+              <li>12: không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và lợi ích khác trong 7 ngày theo lịch. Không đăng ký Chương trình liên kết trong 7 ngày theo lịch.</li>
+              <li>24: hai hạn chế trên trong 14 ngày theo lịch. Tạm ngưng tạo và cập nhật danh sách niêm yết mới trong 14 ngày theo lịch.</li>
+              <li>36: vô hiệu hóa cửa hàng trong 28 ngày theo lịch. Không tham gia siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và lợi ích khác trong 42 ngày theo lịch.</li>
+              <li>48: chấm dứt cửa hàng vĩnh viễn. Có thể bắt đầu hành động pháp lý và/hoặc báo cơ quan quản lý.</li>
+            </ul>
+            <p>Dòng 24 của tóm tắt viết “hai hạn chế trên”. Cột phải nhắc lại đủ hai hạn chế, không dùng chữ “trên”.</p>
+            <p>Ngưỡng 36, cả tóm tắt lẫn toàn văn, không có câu cấm đăng ký Chương trình liên kết. Câu đó chỉ có ở ngưỡng 12 và 24.</p>
+          </div>
+        </div>
+        <div class="source">
+          <p class="col-label">Toàn văn</p>
+          <p>Khi xảy ra hành vi động phạm các chính sách và nguyên tắc của chúng tôi, Nền tảng có quyền triển khai các hành động thực thi khắc phục cần thiết đối với người bán. Người bán tích lũy một số điểm AHR nhất định sẽ đạt đến các ngưỡng thực thi khác nhau. Tại các ngưỡng đó, Nền tảng sẽ triển khai Hành động thực thi đối với tài khoản của họ dựa trên số điểm tích lũy.</p>
+          <p>Biểu đồ bên dưới minh họa mối quan hệ giữa các hành động thực thi và số điểm AHR tích lũy của người bán. Xin lưu ý rằng Nền tảng có thể triển khai nhiều hành động thực thi, tùy theo hình thức vi phạm của người bán.</p>
+          <p>Nền tảng sẽ gửi thông báo cảnh báo chính thức cho người bán khi số điểm AHR của họ còn cách mỗi ngưỡng thực thi 5 điểm.</p>
+          <table class="miles">
+            <caption class="col-label">Giữ nguyên chữ trong bảng nguồn, kể cả “động phạm” ở câu trên</caption>
+            <thead>
+              <tr><th scope="col">Hành động thực thi</th><th scope="col">Điểm</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (7) ngày theo lịch. Người bán sẽ không thể đăng ký Chương trình liên kết (7) ngày theo lịch.</td>
+                <td>12</td>
+              </tr>
+              <tr>
+                <td>Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (14) ngày theo lịch. Người bán sẽ không thể đăng ký Chương trình liên kết (14) ngày theo lịch. Tạm ngưng khả năng tạo và cập nhật danh sách niêm yết mới trong (14) ngày theo lịch.</td>
+                <td>24</td>
+              </tr>
+              <tr>
+                <td>Nền tảng sẽ vô hiệu hóa cửa hàng của người bán trong (28) ngày theo lịch. Người bán sẽ không thể tham gia các siêu chiến dịch mới, hoạt động phát triển người dùng, trợ cấp vận chuyển miễn phí do nền tảng tài trợ và các lợi ích khác của nền tảng trong (42) ngày theo lịch.</td>
+                <td>36</td>
+              </tr>
+              <tr>
+                <td>Nền tảng sẽ vĩnh viễn chấm dứt cửa hàng của người bán. Nền tảng có thể bắt đầu triển khai hành động pháp lý đối với người bán và/hoặc báo cáo người bán với cơ quan quản lý có liên quan</td>
+                <td>48</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="band" id="muc-7">
+        <div class="stamp">7</div>
+        <div class="note">
+          <div class="note-inner">
+            <p class="col-label">Tóm tắt mục</p>
+            <p>Trang ghi có thể kháng nghị hành động này theo mục 9. Phần kháng nghị trên cùng trang được đánh số mục 8. Kháng nghị thành công thì được trả lại tiền.</p>
+            <p>Tóm tắt cả trang nói cùng một lệch số, với chữ hơi khác: “Trang ghi kháng nghị việc giữ tiền theo mục 9. Phần kháng nghị trên trang được đánh số mục 8.”</p>
+          </div>
+        </div>
+        <div class="source">
+          <p class="col-label">Toàn văn, cuối mục 7</p>
+          <p>Người bán có thể nộp đơn kháng nghị đối với hành động thực thi này theo mục 9 dưới đây.</p>
+          <p>Nếu kháng nghị thành công, Nền tảng sẽ trả lại tiền cho người bán.</p>
+          <p>Mục kháng nghị tiếp ngay sau đó được đánh số 8, không phải 9.</p>
+        </div>
+      </section>
+      <section class="band" id="muc-81">
+        <div class="stamp">8.1</div>
+        <div class="note">
+          <div class="note-inner">
+            <p class="col-label">Tóm tắt mục</p>
+            <p>Tối đa hai kháng nghị cho một hành động thực thi. Lần đầu trong 30 ngày kể từ ngày nhận thông báo. Lần hai trong 15 ngày kể từ ngày lần đầu bị từ chối. Sau các mốc đó, người bán không được nộp thêm; đơn muộn không hợp lệ và không được xét.</p>
+            <p>Điểm AHR phát sinh từ mỗi vi phạm tự xóa sau <span class="u8">90 ngày theo lịch</span>, trừ khi người bán đã tích lũy đủ <span class="u8">48 điểm</span>.</p>
+            <p>Tóm tắt mục không còn chữ “phải” ở câu thời hạn. Tóm tắt cả trang cũng không. Chữ đó chỉ còn ở cột phải.</p>
+            <p class="cross"><a href="#muc-2">Câu 90 ngày kia, ngoại lệ AHR = 0, nằm ở mục 2.</a></p>
+          </div>
+        </div>
+        <div class="source">
+          <p class="col-label">Toàn văn</p>
+          <ul>
+            <li>Người bán có thể gửi tối đa hai kháng nghị đối với một hành động thực thi.</li>
+            <li>Trong vòng 30 ngày kể từ ngày nhận được thông báo về hành động thực thi, Người bán <span class="verb">phải</span> nộp kháng nghị đầu tiên. <span class="verb">Phải</span> nộp kháng nghị thứ hai trong vòng mười lăm (15) ngày kể từ ngày từ chối kháng nghị đầu tiên. Sau thời gian này, người bán không được phép nộp kháng nghị nữa.</li>
+            <li>Điểm AHR phát sinh từ mỗi hành động vi phạm sẽ được xóa tự động sau 90 ngày theo lịch, trừ khi Người bán đã tích lũy đủ 48 điểm.</li>
+            <li>Tất cả các kháng nghị được đưa ra sau các mốc thời gian quy định ở trên không phải là kháng nghị hợp lệ và sẽ không được Nền tảng xem xét.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
